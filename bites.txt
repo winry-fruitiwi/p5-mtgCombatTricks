@@ -1,0 +1,44 @@
+p5-MTGCombatTricks
+	back-end
+		basic card retrieval protocols
+			print out names of cards
+			print CMV and mana cost of cards
+			print card type if it's instant
+			print oracle text if card type is instant
+			search oracle text for titlecase flash, if found, print oracle text
+
+		basic mana value and CMV selectors
+			when c, w, u, b, r, or g are pressed, print out associated names
+			when the above are pressed, print num times pressed for that color
+			when the above are pressed, print cmv of current mana pool
+			print card names in BRO that have cmv or less when q is pressed
+			when C, W, U, B, R, or G are pressed, decrement num times pressed
+			when above are pressed, decrement cmv of current mana pool
+
+		mana value/mana color checks, assuming all basic/colorless lands
+			keep track of what colors are selected
+			if color identity is '' or contains selected colors, print card name
+				check color identity == '' because of colorless cards
+
+		mana value/mana color checks, including hybrid lands
+
+		hybrid mana value checks
+
+		phyrexian mana?
+
+	front-end
+		basic interface
+			display "c w u b r g" vertically, multiply strings by num times pressed
+			show pictures of cwubrg (Zz can give them to me) instead
+			display cwubrg pictures horizontally, add bar on top if color pressed
+
+		showing the cards
+			show card art for each card when queried
+			add border to card art
+			add text for card name inside border
+
+		hovering mechanism: side project. worry about this later!
+
+		showing the cards when hovered over
+			display full card when hovering
+			bonus to avoid annoying popups: display full card only as image pressed
