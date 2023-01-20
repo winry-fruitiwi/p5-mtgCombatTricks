@@ -9,6 +9,7 @@ let fixedWidthFont
 let variableWidthFont
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
+let cardList = [] // a list of all cards in the set I'm querying from
 
 
 function preload() {
@@ -27,9 +28,26 @@ function setup() {
     /* initialize instruction div */
     instructions = select('#ins')
     instructions.html(`<pre>
-        numpad 1 → freeze sketch</pre>`)
+        numpad 1 → freeze sketch
+        z → query</pre>`)
 
     debugCorner = new CanvasDebugCorner(5)
+    loadJSON("https://api.scryfall.com/cards/search?q=set:bro", gotData)
+}
+
+
+function gotData(data) {
+    for (let i = 0; i < Object.keys(data["data"]).length; i++) {
+
+        let currentData = data["data"][i]
+        cardList.push(currentData)
+    }
+
+    if (data["has_more"]) {
+        console.log(data["has_more"])
+        loadJSON(data["next_page"], gotData)
+    }
+    print(cardList)
 }
 
 
@@ -57,6 +75,10 @@ function keyPressed() {
     if (key === '`') { /* toggle debug corner visibility */
         debugCorner.visible = !debugCorner.visible
         console.log(`debugCorner visibility set to ${debugCorner.visible}`)
+    }
+
+    if (key === "z") {
+
     }
 }
 
