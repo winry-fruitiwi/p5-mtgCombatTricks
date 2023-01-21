@@ -2,7 +2,7 @@ p5-MTGCombatTricks
 	back-end
 		basic card retrieval protocols
 			print out names of cards
-			print CMV and mana cost of cards
+			print CMC and mana cost of cards
 			print card type if it's instant
 			print oracle text if card type is instant
 			search oracle text for titlecase flash, if found, print oracle text
