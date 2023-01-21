@@ -76,9 +76,10 @@ function keyPressed() {
         console.log(`debugCorner visibility set to ${debugCorner.visible}`)
     }
 
+    // when user presses z, basically query the card list
     if (key === "z") {
         for (let card of cardList) {
-            print(card['name'])
+            print(card['name'] + "\n" + card['type_line'] + "\n" + card['oracle_text'])
         }
     }
 }
