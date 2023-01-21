@@ -77,7 +77,9 @@ function keyPressed() {
     }
 
     if (key === "z") {
-        print(cardList)
+        for (let card of cardList) {
+            print(card['name'])
+        }
     }
 }
 
