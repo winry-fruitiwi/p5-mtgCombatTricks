@@ -47,7 +47,6 @@ function gotData(data) {
         console.log(data["has_more"])
         loadJSON(data["next_page"], gotData)
     }
-    print(cardList)
 }
 
 
@@ -78,7 +77,7 @@ function keyPressed() {
     }
 
     if (key === "z") {
-
+        print(cardList)
     }
 }
 
