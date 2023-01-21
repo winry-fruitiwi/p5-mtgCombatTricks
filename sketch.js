@@ -79,7 +79,11 @@ function keyPressed() {
     // when user presses z, basically query the card list
     if (key === "z") {
         for (let card of cardList) {
-            print(card['name'] + "\n" + card['type_line'] + "\n" + card['oracle_text'])
+            let cardText = ''
+            cardText += card['name']
+            cardText += "\n" + card['type_line']
+            cardText += "\n" + card['oracle_text']
+            print(cardText)
         }
     }
 }
