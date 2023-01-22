@@ -79,7 +79,8 @@ function keyPressed() {
     // when user presses z, basically query the card list
     if (key === "z") {
         for (let card of cardList) {
-            if (card['type_line'] === "Instant") {
+            if (card['type_line'] === "Instant" ||
+                card['oracle_text'].indexOf("Flash") !== -1) {
                 let cardText = ''
                 cardText += card['name'] + " " + card['mana_cost']
                 cardText += " " + card["cmc"]
