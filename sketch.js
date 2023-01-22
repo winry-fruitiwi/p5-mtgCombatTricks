@@ -79,12 +79,14 @@ function keyPressed() {
     // when user presses z, basically query the card list
     if (key === "z") {
         for (let card of cardList) {
-            let cardText = ''
-            cardText += card['name'] + " " + card['mana_cost']
-            cardText += " " + card["cmc"]
-            cardText += "\n" + card['type_line']
-            cardText += "\n" + card['oracle_text']
-            print(cardText)
+            if (card['type_line'] === "Instant") {
+                let cardText = ''
+                cardText += card['name'] + " " + card['mana_cost']
+                cardText += " " + card["cmc"]
+                cardText += "\n" + card['type_line']
+                cardText += "\n" + card['oracle_text']
+                print(cardText)
+            }
         }
     }
 }
