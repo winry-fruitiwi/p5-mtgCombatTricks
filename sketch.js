@@ -134,6 +134,43 @@ function keyPressed() {
         gMana++
         console.log("gMana is now " + gMana)
     }
+
+    // when user presses one key in "CWUBRG", decrease corresponding selector
+    if (key === "C") {
+        print(key)
+        cMana--
+        console.log("cMana is now " + cMana)
+    }
+
+    if (key === "W") {
+        print(key)
+        wMana--
+        console.log("wMana is now " + wMana)
+    }
+
+    if (key === "U") {
+        print(key)
+        uMana--
+        console.log("uMana is now " + uMana)
+    }
+
+    if (key === "B") {
+        print(key)
+        bMana--
+        console.log("bMana is now " + bMana)
+    }
+
+    if (key === "R") {
+        print(key)
+        rMana--
+        console.log("rMana is now " + rMana)
+    }
+
+    if (key === "G") {
+        print(key)
+        gMana--
+        console.log("gMana is now " + gMana)
+    }
 }
 
 
