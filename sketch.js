@@ -10,7 +10,7 @@ let variableWidthFont
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 let cardList = [] // a list of all cards in the set I'm querying from
-
+let cMana, wMana, uMana, bMana, rMana, gMana // color selectors
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -33,6 +33,13 @@ function setup() {
 
     debugCorner = new CanvasDebugCorner(5)
     loadJSON("https://api.scryfall.com/cards/search?q=set:bro", gotData)
+
+    cMana = 0
+    wMana = 0
+    uMana = 0
+    bMana = 0
+    rMana = 0
+    gMana = 0
 }
 
 
@@ -89,6 +96,43 @@ function keyPressed() {
                 print(cardText)
             }
         }
+    }
+
+    // when user presses one key in "cwubrg", increase corresponding selector
+    if (key === "c") {
+        print(key)
+        cMana++
+        console.log("cMana is now " + cMana)
+    }
+
+    if (key === "w") {
+        print(key)
+        wMana++
+        console.log("wMana is now " + wMana)
+    }
+
+    if (key === "u") {
+        print(key)
+        uMana++
+        console.log("uMana is now " + uMana)
+    }
+
+    if (key === "b") {
+        print(key)
+        bMana++
+        console.log("bMana is now " + bMana)
+    }
+
+    if (key === "r") {
+        print(key)
+        rMana++
+        console.log("rMana is now " + rMana)
+    }
+
+    if (key === "g") {
+        print(key)
+        gMana++
+        console.log("gMana is now " + gMana)
     }
 }
 
