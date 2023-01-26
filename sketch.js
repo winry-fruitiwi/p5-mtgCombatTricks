@@ -52,7 +52,6 @@ function gotData(data) {
     }
 
     if (data["has_more"]) {
-        console.log(data["has_more"])
         loadJSON(data["next_page"], gotData)
     }
 }
@@ -87,8 +86,10 @@ function keyPressed() {
     // when user presses z, basically query the card list
     if (key === "z") {
         for (let card of cardList) {
-            if (card['type_line'] === "Instant" ||
-                card['oracle_text'].indexOf("Flash") !== -1) {
+            if ((card['type_line'] === "Instant" ||
+                card['oracle_text'].indexOf("Flash") !== -1) &&
+                (card['mana_cost'].indexOf("W") !== -1 &&
+                wMana > 0)) {
                 let cardText = ''
                 cardText += card['name'] + " " + card['mana_cost']
                 cardText += " " + card["cmc"]
