@@ -86,10 +86,23 @@ function keyPressed() {
     // when user presses z, basically query the card list
     if (key === "z") {
         for (let card of cardList) {
+            /*
+                Check if:
+                type line is instant or
+                oracle text includes Flash, but not lowercase flash
+                    this is case-sensitive, so it should not register flashback
+                and this has to be true, then the following has to be true:
+                card's mana cost has "W" in it, does not include colorless
+                CMV of mana poop is greater than or equal to card's cmc
+                    Currently, CMV of current mana pool is just wMana
+
+                My current approach happens to handle Phyrexian mana because
+                that's just {R/P}
+            */
             if ((card['type_line'] === "Instant" ||
                 card['oracle_text'].indexOf("Flash") !== -1) &&
                 (card['mana_cost'].indexOf("W") !== -1 &&
-                wMana > 0)) {
+                wMana >= card['cmc'])) {
                 let cardText = ''
                 cardText += card['name'] + " " + card['mana_cost']
                 cardText += " " + card["cmc"]

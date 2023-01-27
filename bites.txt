@@ -11,7 +11,7 @@ p5-MTGCombatTricks
 			when c, w, u, b, r, or g are pressed, print out associated names
 			when the above are pressed, print num times pressed for that color
 			when the above are pressed, print cmv of current mana pool
-			print card names in BRO that have cmv or less when q is pressed
+			print card names in BRO that have cmv or less when z is pressed
 			when C, W, U, B, R, or G are pressed, decrement num times pressed
 			when above are pressed, decrement cmv of current mana pool
 
