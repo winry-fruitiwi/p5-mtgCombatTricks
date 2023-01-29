@@ -37,7 +37,7 @@ function setup() {
     loadJSON("https://api.scryfall.com/cards/search?q=set:bro", gotData)
 
     // cMana = 0
-    wMana = 0
+    wMana = new ColorSelector()
     // uMana = 0
     // bMana = 0
     // rMana = 0
@@ -182,19 +182,17 @@ function keyPressed() {
     */
 
     if (key === "w") {
-        print(key)
-        wMana++
-        console.log("wMana is now " + wMana)
+        wMana.incrementMV()
+        console.log("wMana is now " + wMana.getMV())
     }
 
     if (key === "W") {
-        print(key)
-        wMana--
-        console.log("wMana is now " + wMana)
+        wMana.decrementMV()
+        console.log("wMana is now " + wMana.getMV())
     }
 
     // update CMV
-    cmv = wMana
+    cmv = wMana.getMV()
 }
 
 
