@@ -12,6 +12,7 @@ let debugCorner /* output debug text in the bottom left corner of the canvas */
 let cardList = [] // a list of all cards in the set I'm querying from
 // let cMana, wMana, uMana, bMana, rMana, gMana // color selectors
 let wMana
+let cmv // total mana value of current mana pool
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -41,6 +42,7 @@ function setup() {
     // bMana = 0
     // rMana = 0
     // gMana = 0
+    cmv = 0
 }
 
 
@@ -102,7 +104,7 @@ function keyPressed() {
             if ((card['type_line'] === "Instant" ||
                 card['oracle_text'].indexOf("Flash") !== -1) &&
                 (card['mana_cost'].indexOf("W") !== -1 &&
-                wMana >= card['cmc'])) {
+                cmv >= card['cmc'])) {
                 let cardText = ''
                 cardText += card['name'] + " " + card['mana_cost']
                 cardText += " " + card["cmc"]
@@ -190,6 +192,9 @@ function keyPressed() {
         wMana--
         console.log("wMana is now " + wMana)
     }
+
+    // update CMV
+    cmv = wMana
 }
 
 
