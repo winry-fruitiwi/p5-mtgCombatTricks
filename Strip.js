@@ -1,22 +1,50 @@
 // represents a strip of color selectors. to be rendered later.
 class Strip {
     constructor() {
-        // the dictionary of values for the strip
-        this.stripDict = {"c": 0, "w": 0, "u": 0, "b": 0, "r": 0, "g": 0}
+        // the dictionary of colors for the strip, represented by ColorSelectors
+        this.stripDict = {
+            "c": new ColorSelector(),
+            "w": new ColorSelector(),
+            "u": new ColorSelector(),
+            "b": new ColorSelector(),
+            "r": new ColorSelector(),
+            "g": new ColorSelector()
+        }
     }
 
     // increments value of a color
-    selectColor() {
-
+    incrementColor(color) {
+        let selectedColor = this.stripDict[color]
+        selectedColor.incrementMV()
     }
 
-    // decrements value of a color. constrain to 0
-    decrementColor() {
-
+    // decrements value of a color
+    decrementColor(color) {
+        let selectedColor = this.stripDict[color]
+        selectedColor.decrementMV()
     }
 
     // renders the strip with SVGs, to be implemented much later.
     show() {
 
+    }
+
+    // returns the current mana value of the strip, or the sum of all color
+    // selectors.
+    getCMC() {
+        let cmc = 0
+
+        for (color in this.stripDict) {
+            cmc += color.getMV
+        }
+
+        return cmc
+    }
+
+    // I'm considering instead setting the value of a color to 0 instead of
+    // just decrementing it.
+    deselectColor(color) {
+        let selectedColor = this.stripDict[color]
+        selectedColor.mv = 0
     }
 }
