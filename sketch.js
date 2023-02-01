@@ -14,6 +14,7 @@ let cardList = [] // a list of all cards in the set I'm querying from
 // let wMana
 // let cmv // total mana value of current mana pool
 let strip
+const BRO_COLLECTOR_ID_CAP = 287 // constant for when the jumpstart cards start
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -91,6 +92,7 @@ function keyPressed() {
     // when user presses z, basically query the card list
     if (key === "z") {
         print("\n")
+        let cmcBuckets = {}
         for (let card of cardList) {
             /*
                 Check if:
@@ -98,7 +100,7 @@ function keyPressed() {
                 oracle text includes Flash, but not lowercase flash
                     this is case-sensitive, so it should not register flashback
                 and this has to be true, then the following has to be true:
-                card's mana cost has "W" in it, does not include colorless
+                card's mana cost has any selected mana symbol inside
                 CMV of mana pool is greater than or equal to card's cmc
                     Currently, CMV of current mana pool is just wMana
                 card is colorless
@@ -106,21 +108,12 @@ function keyPressed() {
                 My current approach happens to handle Phyrexian mana because
                 that's just {C/P}
             */
-            if ((card['type_line'] === "Instant" ||
-                card['oracle_text'].indexOf("Flash") !== -1) &&
-                ((card['mana_cost'].indexOf("W") !== -1 ||
-                card['colors'].length === 0) &&
-                strip.getCMC() >= card['cmc'])
-            ) {
-                let cardText = ''
-                cardText += card['name'] + " " + card['mana_cost']
-                cardText += " " + card["cmc"]
-                cardText += "\n" + card['type_line']
-                cardText += "\n" + card['oracle_text']
-                print(cardText)
-            }
-
-            // if (isCardColorless(card)) {
+            // if ((card['type_line'] === "Instant" ||
+            //     card['oracle_text'].indexOf("Flash") !== -1) &&
+            //     ((strip.colorsSelected().indexOf(...card['colors']) !== -1 ||
+            //     card['colors'].length === 0) &&
+            //     strip.getCMC() >= card['cmc'])
+            // ) {
             //     let cardText = ''
             //     cardText += card['name'] + " " + card['mana_cost']
             //     cardText += " " + card["cmc"]
@@ -128,7 +121,31 @@ function keyPressed() {
             //     cardText += "\n" + card['oracle_text']
             //     print(cardText)
             // }
+
+            // a dictionary of cards sorted into buckets of mana value. This
+            // sounds a lot like the sorting algorithm that sorts values
+            // with buckets, which is unique in that it only has an O(N)
+            // runtime.
+
+            /*
+                Check if the card is an instant or has titlecase Flash and is
+                in the current mana pool's colors.
+            */
+            if ((card['type_line'] === "Instant" ||
+                card['oracle_text'].indexOf("Flash") !== -1) &&
+                strip.colorsSelected().indexOf(...card['colors']) !== -1) {
+                let cardText = ''
+                cardText += card['name'] + " " + card['mana_cost']
+                cardText += " " + card["cmc"]
+                cardText += "\n" + card['type_line']
+                cardText += "\n" + card['oracle_text']
+                let targetBucket = cmcBuckets[str(card['cmc'])] ?? []
+                targetBucket.push(cardText)
+                cmcBuckets[str(card['cmc'])] = targetBucket
+            }
         }
+
+        print(cmcBuckets)
 
         print("\n")
     }

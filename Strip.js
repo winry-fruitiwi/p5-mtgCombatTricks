@@ -63,7 +63,7 @@ class Strip {
         for (let color in this.stripDict) {
             let selectedColor = this.stripDict[color]
             if (this.colorSelected(color)) {
-                selectedColors.push(color)
+                selectedColors.push(color.toUpperCase())
             }
         }
 
