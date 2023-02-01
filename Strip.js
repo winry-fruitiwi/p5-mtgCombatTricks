@@ -34,8 +34,9 @@ class Strip {
     getCMC() {
         let cmc = 0
 
-        for (color in this.stripDict) {
-            cmc += color.getMV
+        for (let c in this.stripDict) {
+            let Color = this.stripDict[c]
+            cmc += Color.getMV()
         }
 
         return cmc
@@ -46,5 +47,11 @@ class Strip {
     deselectColor(color) {
         let selectedColor = this.stripDict[color]
         selectedColor.mv = 0
+    }
+
+    // checks if the given color is selected
+    colorSelected(color) {
+        let selectedColor = this.stripDict[color]
+        return selectedColor.getMV() !== 0
     }
 }

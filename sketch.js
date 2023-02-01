@@ -11,8 +11,9 @@ let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 let cardList = [] // a list of all cards in the set I'm querying from
 // let cMana, wMana, uMana, bMana, rMana, gMana // color selectors
-let wMana
-let cmv // total mana value of current mana pool
+// let wMana
+// let cmv // total mana value of current mana pool
+let strip
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -37,12 +38,14 @@ function setup() {
     loadJSON("https://api.scryfall.com/cards/search?q=set:bro", gotData)
 
     // cMana = 0
-    wMana = new ColorSelector()
+    // wMana = new ColorSelector()
     // uMana = 0
     // bMana = 0
     // rMana = 0
     // gMana = 0
-    cmv = 0
+    // cmv = 0
+
+    strip = new Strip()
 }
 
 
@@ -87,6 +90,7 @@ function keyPressed() {
 
     // when user presses z, basically query the card list
     if (key === "z") {
+        print("\n")
         for (let card of cardList) {
             /*
                 Check if:
@@ -95,16 +99,19 @@ function keyPressed() {
                     this is case-sensitive, so it should not register flashback
                 and this has to be true, then the following has to be true:
                 card's mana cost has "W" in it, does not include colorless
-                CMV of mana poop is greater than or equal to card's cmc
+                CMV of mana pool is greater than or equal to card's cmc
                     Currently, CMV of current mana pool is just wMana
+                card is colorless
 
                 My current approach happens to handle Phyrexian mana because
                 that's just {R/P}
             */
             if ((card['type_line'] === "Instant" ||
                 card['oracle_text'].indexOf("Flash") !== -1) &&
-                (card['mana_cost'].indexOf("W") !== -1 &&
-                cmv >= card['cmc'])) {
+                ((card['mana_cost'].indexOf("W") !== -1 ||
+                card['colors'].length === 0) &&
+                strip.getCMC() >= card['cmc'])
+            ) {
                 let cardText = ''
                 cardText += card['name'] + " " + card['mana_cost']
                 cardText += " " + card["cmc"]
@@ -112,7 +119,18 @@ function keyPressed() {
                 cardText += "\n" + card['oracle_text']
                 print(cardText)
             }
+
+            // if (isCardColorless(card)) {
+            //     let cardText = ''
+            //     cardText += card['name'] + " " + card['mana_cost']
+            //     cardText += " " + card["cmc"]
+            //     cardText += "\n" + card['type_line']
+            //     cardText += "\n" + card['oracle_text']
+            //     print(cardText)
+            // }
         }
+
+        print("\n")
     }
 
     // when user presses one key in "cwubrg", increase corresponding selector
@@ -182,18 +200,50 @@ function keyPressed() {
     */
 
     if (key === "w") {
-        wMana.incrementMV()
-        console.log("wMana is now " + wMana.getMV())
+        strip.incrementColor("w")
+        console.log("wMana is now " + strip.getCMC())
     }
 
     if (key === "W") {
-        wMana.decrementMV()
-        console.log("wMana is now " + wMana.getMV())
+        strip.decrementColor("w")
+        console.log("wMana is now " + strip.getCMC())
     }
 
     // update CMV
-    cmv = wMana.getMV()
+    // cmv = wMana.getMV()
 }
+
+
+// checks if a given card is colorless
+// function isCardColorless(card) {
+//     let mc = card['mana_cost']
+//
+//     // if a given card is colorless, it should only contain {s, }s, and numbers.
+//     // this is a list of all acceptable numbers.
+//     // TODO Does snow count as colorless?
+//     let charsInColorlessMC = [
+//         "{",
+//         "}",
+//         "1",
+//         "2",
+//         "3",
+//         "4",
+//         "5",
+//         "6",
+//         "7",
+//         "8",
+//         "9",
+//         "0"
+//     ]
+//
+//     for (let char of mc) {
+//         if (charsInColorlessMC.indexOf(char) !== -1) {
+//             return false
+//         }
+//     }
+//
+//     return true
+// }
 
 
 /** 🧹 shows debugging info using text() 🧹 */
