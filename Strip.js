@@ -54,4 +54,24 @@ class Strip {
         let selectedColor = this.stripDict[color]
         return selectedColor.getMV() !== 0
     }
+
+    // returns a list of all colors that have been selected
+    colorsSelected() {
+        // the list of selected colors
+        let selectedColors = []
+
+        for (let color in this.stripDict) {
+            let selectedColor = this.stripDict[color]
+            if (this.colorSelected(color)) {
+                selectedColors.push(color)
+            }
+        }
+
+        return selectedColors
+    }
+
+    getColorMV(color) {
+        let selectedColor = this.stripDict[color]
+        return selectedColor.getMV()
+    }
 }

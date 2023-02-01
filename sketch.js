@@ -104,7 +104,7 @@ function keyPressed() {
                 card is colorless
 
                 My current approach happens to handle Phyrexian mana because
-                that's just {R/P}
+                that's just {C/P}
             */
             if ((card['type_line'] === "Instant" ||
                 card['oracle_text'].indexOf("Flash") !== -1) &&
@@ -199,14 +199,16 @@ function keyPressed() {
 
     */
 
-    if (key === "w") {
-        strip.incrementColor("w")
-        console.log("wMana is now " + strip.getCMC())
-    }
-
-    if (key === "W") {
-        strip.decrementColor("w")
-        console.log("wMana is now " + strip.getCMC())
+    const color = key.toLowerCase()
+    if (color in strip.stripDict) {
+        if (color === key) {
+            strip.incrementColor(color)
+            console.log(color + "Mana is now " + strip.getColorMV(color))
+        }
+        else {
+            strip.decrementColor(color)
+            console.log(color + "Mana is now " + strip.getColorMV(color))
+        }
     }
 
     // update CMV
