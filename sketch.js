@@ -52,8 +52,12 @@ function setup() {
 
 function gotData(data) {
     for (let i = 0; i < Object.keys(data["data"]).length; i++) {
-
         let currentData = data["data"][i]
+
+        if (currentData['collector_number'] > BRO_COLLECTOR_ID_CAP) {
+            continue
+        }
+
         cardList.push(currentData)
     }
 
@@ -132,8 +136,10 @@ function keyPressed() {
                 in the current mana pool's colors.
             */
             if ((card['type_line'] === "Instant" ||
-                card['oracle_text'].indexOf("Flash") !== -1) &&
-                strip.colorsSelected().indexOf(...card['colors']) !== -1) {
+                card['keywords'].indexOf("Flash") !== -1) &&
+                (strip.colorsSelected().indexOf(...card['colors']) !== -1 ||
+                card['colors'].length === 0)
+            ) {
                 let cardText = ''
                 cardText += card['name'] + " " + card['mana_cost']
                 cardText += " " + card["cmc"]
