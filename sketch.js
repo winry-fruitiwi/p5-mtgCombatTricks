@@ -97,35 +97,38 @@ function keyPressed() {
     // when user presses z, basically query the card list
     if (key === "z") {
         print("\n")
+
         let cmcBuckets = {}
         for (let card of cardList) {
             /*
-                Check if:
-                type line is instant or
-                oracle text includes Flash, but not lowercase flash
-                    this is case-sensitive, so it should not register flashback
-                and this has to be true, then the following has to be true:
-                card's mana cost has any selected mana symbol inside
-                CMV of mana pool is greater than or equal to card's cmc
-                    Currently, CMV of current mana pool is just wMana
-                card is colorless
+               Check if:
+               type line is instant or
+               oracle text includes Flash, but not lowercase flash
+                   this is case-sensitive, so it should not register flashback
+               and this has to be true, then the following has to be true:
+               card's mana cost has any selected mana symbol inside
+               CMV of mana pool is greater than or equal to card's cmc
+                   Currently, CMV of current mana pool is just wMana
+               card is colorless
 
-                My current approach happens to handle Phyrexian mana because
-                that's just {C/P}
+               My current approach happens to handle Phyrexian mana because
+               that's just {C/P}
+
+               if ((card['type_line'] === "Instant" ||
+                   card['oracle_text'].indexOf("Flash") !== -1) &&
+                   ((strip.colorsSelected().indexOf(...card['colors']) !== -1 ||
+                   card['colors'].length === 0) &&
+                   strip.getCMC() >= card['cmc'])
+               ) {
+                   let cardText = ''
+                   cardText += card['name'] + " " + card['mana_cost']
+                   cardText += " " + card["cmc"]
+                   cardText += "\n" + card['type_line']
+                   cardText += "\n" + card['oracle_text']
+                   print(cardText)
+               }
+
             */
-            // if ((card['type_line'] === "Instant" ||
-            //     card['oracle_text'].indexOf("Flash") !== -1) &&
-            //     ((strip.colorsSelected().indexOf(...card['colors']) !== -1 ||
-            //     card['colors'].length === 0) &&
-            //     strip.getCMC() >= card['cmc'])
-            // ) {
-            //     let cardText = ''
-            //     cardText += card['name'] + " " + card['mana_cost']
-            //     cardText += " " + card["cmc"]
-            //     cardText += "\n" + card['type_line']
-            //     cardText += "\n" + card['oracle_text']
-            //     print(cardText)
-            // }
 
             // a dictionary of cards sorted into buckets of mana value. This
             // sounds a lot like the sorting algorithm that sorts values
@@ -134,24 +137,32 @@ function keyPressed() {
 
             /*
                 Check if the card is an instant or has titlecase Flash and is
-                in the current mana pool's colors.
+                in the current mana pool's colors. Colorless cards are included.
             */
             if ((card['type_line'] === "Instant" ||
                 card['keywords'].indexOf("Flash") !== -1) &&
                 (strip.colorsSelected().indexOf(...card['colors']) !== -1 ||
                 card['colors'].length === 0)
             ) {
+                // the text of the card I want to print. Will become obsolete
+                // when photos are used instead.
                 let cardText = ''
+                // add the name, mana cost, and CMC to the card text.
                 cardText += card['name'] + " " + card['mana_cost']
                 cardText += " " + card["cmc"]
+
+                // add the type line (usually Instant) and oracle text.
                 cardText += "\n" + card['type_line']
                 cardText += "\n" + card['oracle_text']
+
+                // initialize or get a CMC bucket.
                 let targetBucket = cmcBuckets[str(card['cmc'])] ?? []
                 targetBucket.push(cardText)
                 cmcBuckets[str(card['cmc'])] = targetBucket
             }
         }
 
+        // print all the cards in buckets
         print(cmcBuckets)
 
         print("\n")
