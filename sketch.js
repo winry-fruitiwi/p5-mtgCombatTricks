@@ -38,29 +38,30 @@ function setup() {
     debugCorner = new CanvasDebugCorner(5)
     loadJSON("https://api.scryfall.com/cards/search?q=set:bro", gotData)
 
-    // cMana = 0
-    // wMana = new ColorSelector()
-    // uMana = 0
-    // bMana = 0
-    // rMana = 0
-    // gMana = 0
-    // cmv = 0
-
     strip = new Strip()
 }
 
 
+// callback function for loadJSON when loading a page of the API for a Magic set
 function gotData(data) {
+    // loop through all the keys in data
     for (let i = 0; i < Object.keys(data["data"]).length; i++) {
-        let currentData = data["data"][i]
+        let currentCard = data["data"][i]
 
-        if (currentData['collector_number'] > BRO_COLLECTOR_ID_CAP) {
+        // there are often 5 jumpstart cards in every set (Zz was tricked by
+        // one) so I hardcoded the maximum ID of cards in boosters. If the
+        // current card's collector number is over the max ID, continue.
+        if (currentCard['collector_number'] > BRO_COLLECTOR_ID_CAP) {
             continue
         }
 
-        cardList.push(currentData)
+        // append the current card to the card list
+        cardList.push(currentCard)
     }
 
+    // Scryfall only allows 175 cards or so per query, so sometimes they will
+    // use the has_more attribute to signal that there is another page. We
+    // need to query that if has_more is true.
     if (data["has_more"]) {
         loadJSON(data["next_page"], gotData)
     }
