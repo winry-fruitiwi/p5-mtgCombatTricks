@@ -168,119 +168,28 @@ function keyPressed() {
         print("\n")
     }
 
-    // when user presses one key in "cwubrg", increase corresponding selector
-    /*
-    if (key === "c") {
-        print(key)
-        cMana++
-        console.log("cMana is now " + cMana)
-    }
-
-
-    if (key === "u") {
-        print(key)
-        uMana++
-        console.log("uMana is now " + uMana)
-    }
-
-    if (key === "b") {
-        print(key)
-        bMana++
-        console.log("bMana is now " + bMana)
-    }
-
-    if (key === "r") {
-        print(key)
-        rMana++
-        console.log("rMana is now " + rMana)
-    }
-
-    if (key === "g") {
-        print(key)
-        gMana++
-        console.log("gMana is now " + gMana)
-    }
-
-    // when user presses one key in "CWUBRG", decrease corresponding selector
-    if (key === "C") {
-        print(key)
-        cMana--
-        console.log("cMana is now " + cMana)
-    }
-
-    if (key === "U") {
-        print(key)
-        uMana--
-        console.log("uMana is now " + uMana)
-    }
-
-    if (key === "B") {
-        print(key)
-        bMana--
-        console.log("bMana is now " + bMana)
-    }
-
-    if (key === "R") {
-        print(key)
-        rMana--
-        console.log("rMana is now " + rMana)
-    }
-
-    if (key === "G") {
-        print(key)
-        gMana--
-        console.log("gMana is now " + gMana)
-    }
-
-    */
-
+    // the color that the key is. Since JavaScript dictionary access is
+    // case-sensitive, we have to convert this to lowercase first. It also
+    // makes future operations easier.
     const color = key.toLowerCase()
+
+    // is the lowercase key a color in the strip dict?
     if (color in strip.stripDict) {
+        // if the key itself was also lowercase, then we increment the color.
+        // Note: I helped Zz implement this function when he was writing his
+        // mtgCombatTricks, which is why I remembered the algorithm so fast.
         if (color === key) {
             strip.incrementColor(color)
             console.log(color + "Mana is now " + strip.getColorMV(color))
         }
+
+        // otherwise, decrement the color because the key is uppercase.
         else {
             strip.decrementColor(color)
             console.log(color + "Mana is now " + strip.getColorMV(color))
         }
     }
-
-    // update CMV
-    // cmv = wMana.getMV()
 }
-
-
-// checks if a given card is colorless
-// function isCardColorless(card) {
-//     let mc = card['mana_cost']
-//
-//     // if a given card is colorless, it should only contain {s, }s, and numbers.
-//     // this is a list of all acceptable numbers.
-//     // TODO Does snow count as colorless?
-//     let charsInColorlessMC = [
-//         "{",
-//         "}",
-//         "1",
-//         "2",
-//         "3",
-//         "4",
-//         "5",
-//         "6",
-//         "7",
-//         "8",
-//         "9",
-//         "0"
-//     ]
-//
-//     for (let char of mc) {
-//         if (charsInColorlessMC.indexOf(char) !== -1) {
-//             return false
-//         }
-//     }
-//
-//     return true
-// }
 
 
 /** 🧹 shows debugging info using text() 🧹 */
