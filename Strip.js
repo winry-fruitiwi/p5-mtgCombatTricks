@@ -26,7 +26,45 @@ class Strip {
 
     // renders the strip with SVGs, to be implemented much later.
     show() {
+        // a list of colors for each color represented in the strip
+        let colors = [
+            color(218, 45, 75),
+            color(259, 13, 37),
+            color(9, 69, 75),
+            color(89, 100, 58)
+        ]
 
+        // set the stroke weight
+        strokeWeight(2)
+
+        // the starting x- and y-position of the dots
+        let startX = 50
+        let startY = 50
+
+        // the radius of the circle
+        let r = 10
+
+        // the x-margin between each color representation and the next. There
+        // will be no y-margin.
+        let xMargin = r + 10
+
+        // the keys of the strip dictionary
+        let stripDictKeys = Object.keys(this.stripDict)
+
+        // console.log(Object.keys(this.stripDict).length)
+
+        // iterate through the dictionary using its length
+        for (let i = 0; i < stripDictKeys.length; i++) {
+            // draw a circle. x-coordinate should be startingX + (r + xMargin)*i
+            // y-coordinate should be startingY
+            // set the color. if the color isn't selected, make the circle
+            // hollow.
+            fill(0, 0, 80)
+            stroke(0, 0, 80)
+            if (!this.colorSelected(stripDictKeys[i]))
+                noFill()
+            circle(startX + (r + xMargin) * i, startY, r * 2)
+        }
     }
 
     // returns the current mana value of the strip, or the sum of all color

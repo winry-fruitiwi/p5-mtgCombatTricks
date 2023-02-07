@@ -76,6 +76,8 @@ function draw() {
     debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
     debugCorner.showBottom()
 
+    strip.show()
+
     if (frameCount > 3000)
         noLoop()
 }
@@ -144,16 +146,18 @@ function keyPressed() {
                 (strip.colorsSelected().indexOf(...card['colors']) !== -1 ||
                 card['colors'].length === 0)
             ) {
-                // the text of the card I want to print. Will become obsolete
-                // when photos are used instead.
-                let cardText = ''
-                // add the name, mana cost, and CMC to the card text.
-                cardText += card['name'] + " " + card['mana_cost']
-                cardText += " " + card["cmc"]
+                // // the text of the card I want to print. Will become obsolete
+                // // when photos are used instead.
+                // let cardText = ''
+                // // add the name, mana cost, and CMC to the card text.
+                // cardText += card['name'] + " " + card['mana_cost']
+                // cardText += " " + card["cmc"]
+                //
+                // // add the type line (usually Instant) and oracle text.
+                // cardText += "\n" + card['type_line']
+                // cardText += "\n" + card['oracle_text']
 
-                // add the type line (usually Instant) and oracle text.
-                cardText += "\n" + card['type_line']
-                cardText += "\n" + card['oracle_text']
+                let cardText = card['image_uris']['png']
 
                 // initialize or get a CMC bucket.
                 let targetBucket = cmcBuckets[str(card['cmc'])] ?? []
