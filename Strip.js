@@ -28,25 +28,27 @@ class Strip {
     show() {
         // a list of colors for each color represented in the strip
         let colors = [
-            color(218, 45, 75),
-            color(259, 13, 37),
-            color(9, 69, 75),
-            color(89, 100, 58)
+            color(266, 7, 60),
+            color(52, 15, 89),
+            color(218, 45, 85),
+            color(259, 13, 47),
+            color(9, 69, 85),
+            color(89, 100, 68)
         ]
 
         // set the stroke weight
-        strokeWeight(2)
+        strokeWeight(4)
 
         // the starting x- and y-position of the dots
         let startX = 50
         let startY = 50
 
         // the radius of the circle
-        let r = 10
+        let r = 20
 
         // the x-margin between each color representation and the next. There
         // will be no y-margin.
-        let xMargin = r + 10
+        let xMargin = r + 15
 
         // the keys of the strip dictionary
         let stripDictKeys = Object.keys(this.stripDict)
@@ -59,10 +61,12 @@ class Strip {
             // y-coordinate should be startingY
             // set the color. if the color isn't selected, make the circle
             // hollow.
-            fill(0, 0, 80)
-            stroke(0, 0, 80)
-            if (!this.colorSelected(stripDictKeys[i]))
+            fill(colors[i])
+            stroke(colors[i])
+            if (!this.colorSelected(stripDictKeys[i])) {
                 noFill()
+                stroke(0, 0, 80, 20)
+            }
             circle(startX + (r + xMargin) * i, startY, r * 2)
         }
     }
