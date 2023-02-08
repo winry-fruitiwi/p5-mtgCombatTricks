@@ -43,12 +43,16 @@ class Strip {
         let startX = 50
         let startY = 50
 
-        // the radius of the circle
-        let r = 20
+        // half of the length of the edge of the square so I can calculate
+        // margin properly
+        let r = 30
 
         // the x-margin between each color representation and the next. There
         // will be no y-margin.
         let xMargin = r + 15
+
+        // how rounded the square will be
+        let rounding = 10
 
         // the keys of the strip dictionary
         let stripDictKeys = Object.keys(this.stripDict)
@@ -67,7 +71,9 @@ class Strip {
                 noFill()
                 stroke(0, 0, 80, 20)
             }
-            circle(startX + (r + xMargin) * i, startY, r * 2)
+
+            rectMode(CENTER)
+            square(startX + (r + xMargin) * i, startY, r * 2, rounding)
         }
     }
 
