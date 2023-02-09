@@ -71,10 +71,16 @@ function gotData(data) {
 function draw() {
     background(234, 34, 24)
 
+    textAlign(LEFT)
+    textSize(14)
+
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
     debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
     debugCorner.showBottom()
+
+    textSize(30)
+    textAlign(CENTER)
 
     strip.show()
 

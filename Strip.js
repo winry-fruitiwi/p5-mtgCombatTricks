@@ -66,11 +66,25 @@ class Strip {
             // set the color. if the color isn't selected, make the circle
             // hollow.
             fill(colors[i])
-            stroke(colors[i])
             if (!this.colorSelected(stripDictKeys[i])) {
-                noFill()
+                fill(0, 0, 80, 20)
+                noStroke()
+                // write the letter in the middle of the rounded square about to
+                // be drawn with no stroke or fill
+                text(stripDictKeys[i].toUpperCase(),
+                    startX + (r + xMargin) * i,
+                    startY + textAscent()/2)
                 stroke(0, 0, 80, 20)
+            } else {
+                noStroke()
+                // do the same here. we need there to be no stroke and no fill
+                text(stripDictKeys[i].toUpperCase(),
+                    startX + (r + xMargin) * i,
+                    startY + textAscent()/2)
+                stroke(colors[i])
             }
+
+            noFill()
 
             rectMode(CENTER)
             square(startX + (r + xMargin) * i, startY, r * 2, rounding)
