@@ -3,6 +3,10 @@ html, body {
     color: gainsboro;
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
 body {
     display: flex;
     align-items: center;
@@ -12,7 +16,11 @@ body {
 #ins {
     color: gainsboro;
     padding: 2px 4px 2px 4px;
-    font-family: consolas;
+    font-family: consolas, monospace;
     font-size: 12px;
     height: 100px;
+}
+
+#canvas {
+    margin-top: 30px;
 }
