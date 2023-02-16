@@ -15,6 +15,7 @@ let cardList = [] // a list of all cards in the set I'm querying from
 // let cmv // total mana value of current mana pool
 let strip
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when the jumpstart cards start
+let cavalryImage // test image of Aeronaut Cavalry from BRO
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -39,6 +40,8 @@ function setup() {
     loadJSON("https://api.scryfall.com/cards/search?q=set:bro", gotData)
 
     strip = new Strip()
+
+    cavalryImage = loadImage("images/AeronautCavalryTest.png")
 }
 
 
@@ -83,6 +86,11 @@ function draw() {
     textAlign(CENTER)
 
     strip.show()
+    if (cavalryImage.width !== 100) {
+        print("resized")
+        cavalryImage.resize(100, 0)
+    }
+    image(cavalryImage, 100, 800)
 
     if (frameCount > 3000)
         noLoop()
@@ -141,7 +149,7 @@ function keyPressed() {
             // a dictionary of cards sorted into buckets of mana value. This
             // sounds a lot like the sorting algorithm that sorts values
             // with buckets, which is unique in that it only has an O(N)
-            // runtime.
+            // runtime. (that's Radix sort)
 
             /*
                 Check if the card is an instant or has titlecase Flash and is
@@ -163,7 +171,9 @@ function keyPressed() {
                 // cardText += "\n" + card['type_line']
                 // cardText += "\n" + card['oracle_text']
 
-                let cardText = card['image_uris']['png']
+                let cardText = loadImage(card['image_uris']['png'])
+
+                // image(cardText, 100, 800)
 
                 // initialize or get a CMC bucket.
                 let targetBucket = cmcBuckets[str(card['cmc'])] ?? []
@@ -174,6 +184,14 @@ function keyPressed() {
 
         // print all the cards in buckets
         print(cmcBuckets)
+        // for (let bucket in cmcBuckets) {
+        //     let cmc = cmcBuckets[bucket]
+        //     for (let card in cmc) {
+        //         let Image = cmc[card]
+        //
+        //         image(Image, 100, 100)
+        //     }
+        // }
 
         print("\n")
     }
