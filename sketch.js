@@ -26,9 +26,11 @@ const CARD_HEIGHT = 340 // hardcoded height of each card
 const CARD_START_DISPLAY_X = 20 // the x-pos of the first card
 const CARD_START_DISPLAY_Y = 100 // the y-pos of the first card
 const CARD_PADDING_X = 20 // x-padding of each card
-const CARD_PADDING_Y = 30 // y-padding of each card
+const CARD_PADDING_Y = 20 // y-padding of each card
 const X_DIST_TO_NEXT_CARD = CARD_WIDTH + CARD_PADDING_X
 const Y_DIST_TO_NEXT_CARD = CARD_HEIGHT + CARD_PADDING_Y
+const LINE_MARGIN = 20 // margin between lines
+const Y_DIST_TO_NEXT_CARD_ROW = CARD_HEIGHT + CARD_PADDING_Y * 2 + LINE_MARGIN
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -38,7 +40,7 @@ function preload() {
 
 
 function setup() {
-    let cnv = createCanvas(900, 3000)
+    let cnv = createCanvas(1200, 3000)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 14)
@@ -100,6 +102,9 @@ function draw() {
 
     strip.show()
 
+    // the current image's position for the loops below
+    let currentImgPos = new p5.Vector(CARD_START_DISPLAY_X, CARD_START_DISPLAY_Y)
+
     for (let i=0; i<Object.keys(cmcBuckets).length; i++) {
         // the selected cmc bucket
         let cmcBucket = cmcBuckets[Object.keys(cmcBuckets)[i]]
@@ -111,12 +116,26 @@ function draw() {
             // resize the image every frame TODO find a way to not need this
             img.resize(CARD_WIDTH, 0)
 
+            // if the image will go farther than the width of the screen, wrap
+            // the photo around to the next line before displaying it.
+            if (currentImgPos.x + CARD_WIDTH > width) {
+                currentImgPos.x = CARD_START_DISPLAY_X
+                currentImgPos.y += Y_DIST_TO_NEXT_CARD
+            }
+
             // display the image at the correct x- and y-position
             image(img,
-                CARD_START_DISPLAY_X + j * (X_DIST_TO_NEXT_CARD),
-                CARD_START_DISPLAY_Y + i * (Y_DIST_TO_NEXT_CARD)
+                currentImgPos.x,
+                currentImgPos.y
             )
+
+            // update the current image's position
+            currentImgPos.x += X_DIST_TO_NEXT_CARD
         }
+
+        // reset the image x-position and update the y-position
+        currentImgPos.x = CARD_START_DISPLAY_X
+        currentImgPos.y += Y_DIST_TO_NEXT_CARD_ROW
     }
 
     if (frameCount > 3000)
