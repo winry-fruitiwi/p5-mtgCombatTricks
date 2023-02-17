@@ -14,8 +14,21 @@ let cardList = [] // a list of all cards in the set I'm querying from
 // let wMana
 // let cmv // total mana value of current mana pool
 let strip
-const BRO_COLLECTOR_ID_CAP = 287 // constant for when the jumpstart cards start
 let cavalryImage // test image of Aeronaut Cavalry from BRO
+let cmcBuckets = {}
+
+// constants
+const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
+const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
+
+const CARD_WIDTH = 240 // ideal width of each card
+const CARD_HEIGHT = 340 // hardcoded height of each card
+const CARD_START_DISPLAY_X = 20 // the x-pos of the first card
+const CARD_START_DISPLAY_Y = 100 // the y-pos of the first card
+const CARD_PADDING_X = 20 // x-padding of each card
+const CARD_PADDING_Y = 30 // y-padding of each card
+const X_DIST_TO_NEXT_CARD = CARD_WIDTH + CARD_PADDING_X
+const Y_DIST_TO_NEXT_CARD = CARD_HEIGHT + CARD_PADDING_Y
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -86,11 +99,25 @@ function draw() {
     textAlign(CENTER)
 
     strip.show()
-    if (cavalryImage.width !== 100) {
-        print("resized")
-        cavalryImage.resize(100, 0)
+
+    for (let i=0; i<Object.keys(cmcBuckets).length; i++) {
+        // the selected cmc bucket
+        let cmcBucket = cmcBuckets[Object.keys(cmcBuckets)[i]]
+        // print(cmcBucket)
+        for (let j=0; j<cmcBucket.length; j++) {
+            // the current image
+            let img = cmcBucket[j]
+
+            // resize the image every frame TODO find a way to not need this
+            img.resize(CARD_WIDTH, 0)
+
+            // display the image at the correct x- and y-position
+            image(img,
+                CARD_START_DISPLAY_X + j * (X_DIST_TO_NEXT_CARD),
+                CARD_START_DISPLAY_Y + i * (Y_DIST_TO_NEXT_CARD)
+            )
+        }
     }
-    image(cavalryImage, 100, 800)
 
     if (frameCount > 3000)
         noLoop()
@@ -114,7 +141,7 @@ function keyPressed() {
     if (key === "z") {
         print("\n")
 
-        let cmcBuckets = {}
+        cmcBuckets = {}
         for (let card of cardList) {
             /*
                Check if:
@@ -182,16 +209,19 @@ function keyPressed() {
             }
         }
 
-        // print all the cards in buckets
-        print(cmcBuckets)
-        // for (let bucket in cmcBuckets) {
-        //     let cmc = cmcBuckets[bucket]
-        //     for (let card in cmc) {
-        //         let Image = cmc[card]
-        //
-        //         image(Image, 100, 100)
+        // for (let i=0; i<Object.keys(cmcBuckets).length; i++) {
+        //     let cmcBucket = Object.keys(cmcBuckets)[i]
+        //     // print(cmcBucket)
+        //     for (let img of cmcBuckets[cmcBucket]) {
+        //         // multiply the image's height to 240, the target image width,
+        //         // divided by the current image's width
+        //         img.height *= 240/img.width
+        //         img.width = 240
         //     }
         // }
+
+        // print all the cards in buckets
+        print(cmcBuckets)
 
         print("\n")
     }
