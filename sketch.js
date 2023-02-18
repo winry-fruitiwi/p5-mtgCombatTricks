@@ -40,7 +40,7 @@ function preload() {
 
 
 function setup() {
-    let cnv = createCanvas(1200, 3000)
+    let cnv = createCanvas(1200, 6000)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 14)
@@ -100,6 +100,11 @@ function draw() {
     textSize(30)
     textAlign(CENTER)
 
+    // this is just a test
+    // stroke(237, 37, 20)
+    // strokeWeight(10)
+    // line(0, height/2, width, height/2)
+
     strip.show()
 
     // the current image's position for the loops below
@@ -109,6 +114,10 @@ function draw() {
         // the selected cmc bucket
         let cmcBucket = cmcBuckets[Object.keys(cmcBuckets)[i]]
         // print(cmcBucket)
+
+        // save the current image's y-position
+        let savedImgYPos = currentImgPos.y
+
         for (let j=0; j<cmcBucket.length; j++) {
             // the current image
             let img = cmcBucket[j]
@@ -132,6 +141,9 @@ function draw() {
             // update the current image's position
             currentImgPos.x += X_DIST_TO_NEXT_CARD
         }
+        stroke(237, 37, 20)
+        strokeWeight(40)
+        line(0, savedImgYPos, width, savedImgYPos)
 
         // reset the image x-position and update the y-position
         currentImgPos.x = CARD_START_DISPLAY_X
