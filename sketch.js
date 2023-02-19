@@ -142,8 +142,14 @@ function draw() {
             currentImgPos.x += X_DIST_TO_NEXT_CARD
         }
         stroke(237, 37, 20)
-        strokeWeight(40)
-        line(0, savedImgYPos, width, savedImgYPos)
+        strokeWeight(20)
+
+        if (i !== 0){
+            // half of all the padding and margin so that I can center the line
+            // I'm about to draw.
+            let halfAllSpacing = (CARD_PADDING_X + CARD_PADDING_Y + LINE_MARGIN)/2
+            line(0, savedImgYPos - halfAllSpacing, width, savedImgYPos - halfAllSpacing)
+        }
 
         // reset the image x-position and update the y-position
         currentImgPos.x = CARD_START_DISPLAY_X
