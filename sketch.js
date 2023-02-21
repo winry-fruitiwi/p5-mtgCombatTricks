@@ -23,8 +23,9 @@ const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
-const CARD_START_DISPLAY_X = 20 // the x-pos of the first card
-const CARD_START_DISPLAY_Y = 100 // the y-pos of the first card
+const SIDE_WIDTH = 60 // the width of the whitish sidebar
+const CARD_START_DISPLAY_X = 20 + SIDE_WIDTH // the x-pos of the first card
+const CARD_START_DISPLAY_Y = 110 // the y-pos of the first card
 const CARD_PADDING_X = 20 // x-padding of each card
 const CARD_PADDING_Y = 20 // y-padding of each card
 const X_DIST_TO_NEXT_CARD = CARD_WIDTH + CARD_PADDING_X
@@ -104,6 +105,11 @@ function draw() {
     // stroke(237, 37, 20)
     // strokeWeight(10)
     // line(0, height/2, width, height/2)
+
+    // before anything else, draw a transparent rect from the top to the bottom
+    // of the canvas with a constant width
+    fill(0, 0, 80, 60)
+    rect(0, 0, 60, height)
 
     strip.show()
 

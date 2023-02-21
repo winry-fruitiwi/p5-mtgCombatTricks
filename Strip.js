@@ -36,9 +36,6 @@ class Strip {
             color(89, 100, 68)
         ]
 
-        // set the stroke weight
-        strokeWeight(4)
-
         // the starting x- and y-position of the dots
         let startX = 50
         let startY = 50
@@ -57,7 +54,20 @@ class Strip {
         // the keys of the strip dictionary
         let stripDictKeys = Object.keys(this.stripDict)
 
-        // console.log(Object.keys(this.stripDict).length)
+        // add a rectangle behind the strip dictionary key display to make it
+        // look like it's part of the background
+        stroke(237, 37, 20)
+        fill(237, 37, 20)
+        strokeWeight(20)
+        // the y-position should end exactly where the color selectors
+        // vertically end
+        rect(0, 0, width, startY + r)
+
+        noFill()
+        noStroke()
+
+        // set the stroke weight
+        strokeWeight(4)
 
         // iterate through the dictionary using its length
         for (let i = 0; i < stripDictKeys.length; i++) {
