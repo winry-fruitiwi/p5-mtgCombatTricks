@@ -41,7 +41,7 @@ function preload() {
 
 
 function setup() {
-    let cnv = createCanvas(1200, 6000)
+    let cnv = createCanvas(1200, 600)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 14)
@@ -106,12 +106,21 @@ function draw() {
     // strokeWeight(10)
     // line(0, height/2, width, height/2)
 
+    displayCardImages()
+
+    strip.show()
+
+    if (frameCount > 3000)
+        noLoop()
+}
+
+
+// display all the card images in cmcBuckets
+function displayCardImages() {
     // before anything else, draw a transparent rect from the top to the bottom
     // of the canvas with a constant width
     fill(0, 0, 80, 60)
     rect(0, 0, 60, height)
-
-    strip.show()
 
     // the current image's position for the loops below
     let currentImgPos = new p5.Vector(CARD_START_DISPLAY_X, CARD_START_DISPLAY_Y)
@@ -150,7 +159,7 @@ function draw() {
         stroke(237, 37, 20)
         strokeWeight(20)
 
-        if (i !== 0){
+        if (i !== 0) {
             // half of all the padding and margin so that I can center the line
             // I'm about to draw.
             let halfAllSpacing = (CARD_PADDING_X + CARD_PADDING_Y + LINE_MARGIN)/2
@@ -162,10 +171,9 @@ function draw() {
         currentImgPos.y += Y_DIST_TO_NEXT_CARD_ROW
     }
 
-    if (frameCount > 3000)
-        noLoop()
+    if (height !== currentImgPos.y)
+        resizeCanvas(1200, currentImgPos.y)
 }
-
 
 function keyPressed() {
     /* stop sketch */

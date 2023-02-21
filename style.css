@@ -3,9 +3,9 @@ html, body {
     color: gainsboro;
 }
 
-body::-webkit-scrollbar {
-    display: none;
-}
+/*body::-webkit-scrollbar {*/
+/*    display: none;*/
+/*}*/
 
 body {
     display: flex;
