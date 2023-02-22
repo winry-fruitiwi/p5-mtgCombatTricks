@@ -169,6 +169,16 @@ function displayCardImages() {
         // reset the image x-position and update the y-position
         currentImgPos.x = CARD_START_DISPLAY_X
         currentImgPos.y += Y_DIST_TO_NEXT_CARD_ROW
+
+        // draw text for the current CMC bucket's number at the average of the
+        // current and saved image position
+        let cmcBucketDisplayY = (savedImgYPos + currentImgPos.y)/2
+        let cmcBucketDisplayX = SIDE_WIDTH/2
+
+        let cmcBucketValue = Object.keys(cmcBuckets)[i]
+        noStroke()
+        fill(237, 37, 20)
+        text(str(cmcBucketValue), cmcBucketDisplayX, cmcBucketDisplayY)
     }
 
     if (height !== currentImgPos.y)
