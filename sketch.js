@@ -124,6 +124,7 @@ function displayCardImages() {
 
     // the current image's position for the loops below
     let currentImgPos = new p5.Vector(CARD_START_DISPLAY_X, CARD_START_DISPLAY_Y)
+    let savedImg
 
     for (let i=0; i<Object.keys(cmcBuckets).length; i++) {
         // the selected cmc bucket
@@ -135,10 +136,7 @@ function displayCardImages() {
 
         for (let j=0; j<cmcBucket.length; j++) {
             // the current image
-            let img = cmcBucket[j]
-
-            // resize the image every frame TODO find a way to not need this
-            img.resize(CARD_WIDTH, 0)
+            let img = cmcBucket[j][0]
 
             // if the image will go farther than the width of the screen, wrap
             // the photo around to the next line before displaying it.
@@ -147,7 +145,20 @@ function displayCardImages() {
                 currentImgPos.y += Y_DIST_TO_NEXT_CARD
             }
 
-            // display the image at the correct x- and y-position
+            // resize the image every frame TODO find a way to not need this
+            if (currentImgPos.x < mouseX &&
+                mouseX < currentImgPos.x + CARD_WIDTH &&
+
+                currentImgPos.y < mouseY &&
+                mouseY < currentImgPos.y + CARD_WIDTH) {
+                savedImg = cmcBucket[j][1]
+                // img.resize(CARD_WIDTH * 1.5, 0)
+            }
+            // else
+            img.resize(CARD_WIDTH, 0)
+
+            // display the image at the correct x- and y-position if the mouse
+            // is not within the width of the photo
             image(img,
                 currentImgPos.x,
                 currentImgPos.y
@@ -183,6 +194,19 @@ function displayCardImages() {
 
     if (height !== currentImgPos.y)
         resizeCanvas(1200, currentImgPos.y)
+
+    if (savedImg) {
+        savedImg.resize(1.5 * CARD_WIDTH, 0)
+        image(savedImg,
+            windowWidth/2 + scrollX - savedImg.width/2,
+            windowHeight/2 + scrollY - savedImg.height/2
+        )
+
+        // image(savedImg,
+        //     windowWidth/2 + scrollX,
+        //     windowHeight/2 + scrollY
+        // )
+    }
 }
 
 function keyPressed() {
@@ -260,12 +284,13 @@ function keyPressed() {
                 // cardText += "\n" + card['oracle_text']
 
                 let cardText = loadImage(card['image_uris']['png'])
+                let cardText2 = loadImage(card['image_uris']['png'])
 
                 // image(cardText, 100, 800)
 
                 // initialize or get a CMC bucket.
                 let targetBucket = cmcBuckets[str(card['cmc'])] ?? []
-                targetBucket.push(cardText)
+                targetBucket.push([cardText, cardText2])
                 cmcBuckets[str(card['cmc'])] = targetBucket
             }
         }
