@@ -1,0 +1,25 @@
+What Is an SVG File? SVG Image and Tags Explained
+
+SVG stands for Scalable Vector Graphics, defines vector-based graphics in webpages
+embed in HTML or save it to a file and insert it as normal
+you can use apps to create SVGs
+https://cdn-media-2.freecodecamp.org/w1280/5f9c9d39740569d1a4ca3693.jpg
+	can an app make a copy of this, though?
+define a viewport with the svg tag
+svg base coordinates start at top-left, increase as you go down and right
+first tag: <rect /> with fill attribute, defines a rectangle
+second tag: <circle /> defines circle/ellipse centered at x, y with radius of r
+third tag: <text /> adds text with an anchor
+group styles with <g> tag
+<path /> element defines vector path!
+commands:
+	M = move to
+	L = line to
+	H = horizontal line t
+	V = vertical line to
+	Z = close path
+	C = (cubic bezier) curve to
+	S = smooth curve to
+	Q = quadratic Bezier curve to
+	T = smooth quadratic bezier curve to
+	A = arc

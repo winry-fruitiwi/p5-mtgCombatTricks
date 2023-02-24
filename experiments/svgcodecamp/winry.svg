@@ -1,0 +1,14 @@
+<svg
+        version="1.1"
+        width="100%"
+        viewBox="0 0 600 900"
+        xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="10" width="100" height="100" fill="#f7b2c1" />
+    <circle cx="240" cy="60" r="50" fill="#c1b2f7" stroke="#b2c1f7" stroke-width="15"/>
+    <text x="450" y="70" font-size="20" text-anchor="middle">SVG Text is browser readable!</text>
+    <g stroke="#b2c1f7"> <!-- g is for group -->
+        <path stroke-width="2" d="M10 170 l590 0 m10 180 l590 0 Z" />
+        <path stroke-width="4" d="M10 190 l590 0" />
+        <path stroke-width="6" d="M10 210 l590 0" />
+    </g>
+</svg>
