@@ -42,3 +42,9 @@ p5-MTGCombatTricks
 		showing the cards when hovered over
 			display full card when hovering
 			bonus to avoid annoying popups: display full card only as image pressed
+
+
+🏭 Display a single mana symbol SVG in the middle of the screen without any tint
+🏭 Display a tinted mana symbol SVG in middle of screen
+🏭 Resize the mana symbols to the appropriate size
+🏭 Display all SVGs in SVG list in Strip.show()

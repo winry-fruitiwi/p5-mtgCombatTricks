@@ -28,12 +28,22 @@ class Strip {
     show() {
         // a list of colors for each color represented in the strip
         let colors = [
-            color(266, 7, 60),
-            color(52, 15, 89),
-            color(218, 45, 85),
-            color(259, 13, 47),
-            color(9, 69, 85),
-            color(89, 100, 68)
+            color(266, 7, 60), // c
+            color(52, 15, 89), // w
+            color(218, 45, 85), // u
+            color(259, 13, 47), // b
+            color(9, 69, 85), // r
+            color(89, 100, 68) // g
+        ]
+
+        // a list of mana symbols for each color represented in Strip
+        let manaSymbolImages = [
+            c,
+            w,
+            u,
+            b,
+            r,
+            g
         ]
 
         // the starting x- and y-position of the dots
@@ -42,11 +52,11 @@ class Strip {
 
         // half of the length of the edge of the square so I can calculate
         // margin properly
-        let r = 30
+        let radius = 30
 
         // the x-margin between each color representation and the next. There
         // will be no y-margin.
-        let xMargin = r + 15
+        let xMargin = radius + 15
 
         // how rounded the square will be
         let rounding = 10
@@ -61,7 +71,7 @@ class Strip {
         strokeWeight(20)
         // the y-position should end exactly where the color selectors
         // vertically end
-        rect(0, 0, width, startY + r)
+        rect(0, 0, width, startY + radius)
 
         noFill()
         noStroke()
@@ -82,14 +92,14 @@ class Strip {
                 // write the letter in the middle of the rounded square about to
                 // be drawn with no stroke or fill
                 text(stripDictKeys[i].toUpperCase(),
-                    startX + (r + xMargin) * i,
+                    startX + (radius + xMargin) * i,
                     startY + textAscent()/2)
                 stroke(0, 0, 80, 20)
             } else {
                 noStroke()
                 // do the same here. we need there to be no stroke and no fill
                 text(stripDictKeys[i].toUpperCase(),
-                    startX + (r + xMargin) * i,
+                    startX + (radius + xMargin) * i,
                     startY + textAscent()/2)
                 stroke(colors[i])
             }
@@ -97,7 +107,7 @@ class Strip {
             noFill()
 
             rectMode(CENTER)
-            square(startX + (r + xMargin) * i, startY, r * 2, rounding)
+            square(startX + (radius + xMargin) * i, startY, radius * 2, rounding)
         }
     }
 

@@ -32,6 +32,7 @@ const X_DIST_TO_NEXT_CARD = CARD_WIDTH + CARD_PADDING_X
 const Y_DIST_TO_NEXT_CARD = CARD_HEIGHT + CARD_PADDING_Y
 const LINE_MARGIN = 20 // margin between lines
 const Y_DIST_TO_NEXT_CARD_ROW = CARD_HEIGHT + CARD_PADDING_Y * 2 + LINE_MARGIN
+let c, w, u, b, r, g, p // images for CWUBRG and Phyrexian mana symbols
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -58,6 +59,15 @@ function setup() {
     strip = new Strip()
 
     cavalryImage = loadImage("images/AeronautCavalryTest.png")
+    c = loadImage("c.svg")
+    w = loadImage("w.svg")
+    u = loadImage("u.svg")
+    b = loadImage("b.svg")
+    r = loadImage("r.svg")
+    g = loadImage("g.svg")
+
+    // not sure if we are going to use Phyrexian mana.
+    p = loadImage("p.svg")
 }
 
 
