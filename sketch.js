@@ -59,15 +59,17 @@ function setup() {
     strip = new Strip()
 
     cavalryImage = loadImage("images/AeronautCavalryTest.png")
-    c = loadImage("c.svg")
-    w = loadImage("w.svg")
-    u = loadImage("u.svg")
-    b = loadImage("b.svg")
-    r = loadImage("r.svg")
-    g = loadImage("g.svg")
+    c = loadImage("svg/c.svg")
+    w = loadImage("svg/w.svg")
+    u = loadImage("svg/u.svg")
+    b = loadImage("svg/b.svg")
+    r = loadImage("svg/r.svg")
+    g = loadImage("svg/g.svg")
 
     // not sure if we are going to use Phyrexian mana.
-    p = loadImage("p.svg")
+    p = loadImage("svg/p.svg")
+
+    print(p)
 }
 
 
@@ -119,6 +121,9 @@ function draw() {
     displayCardImages()
 
     strip.show()
+
+    // b.resize(50, 0)
+    // image(b, width/2, height/2)
 
     if (frameCount > 3000)
         noLoop()

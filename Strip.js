@@ -88,17 +88,21 @@ class Strip {
             fill(colors[i])
             if (!this.colorSelected(stripDictKeys[i])) {
                 fill(0, 0, 80, 20)
+
+                let manaImg = manaSymbolImages[i]
+
+                manaImg.resize(radius, 0)
                 noStroke()
                 // write the letter in the middle of the rounded square about to
                 // be drawn with no stroke or fill
-                text(stripDictKeys[i].toUpperCase(),
+                image(manaImg,
                     startX + (radius + xMargin) * i,
                     startY + textAscent()/2)
                 stroke(0, 0, 80, 20)
             } else {
                 noStroke()
                 // do the same here. we need there to be no stroke and no fill
-                text(stripDictKeys[i].toUpperCase(),
+                image(manaImg,
                     startX + (radius + xMargin) * i,
                     startY + textAscent()/2)
                 stroke(colors[i])
