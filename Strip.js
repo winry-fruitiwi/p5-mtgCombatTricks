@@ -85,26 +85,27 @@ class Strip {
             // y-coordinate should be startingY
             // set the color. if the color isn't selected, make the circle
             // hollow.
+
+            let manaImg = manaSymbolImages[i]
+
+            manaImg.resize(radius, 0)
+
             fill(colors[i])
             if (!this.colorSelected(stripDictKeys[i])) {
                 fill(0, 0, 80, 20)
 
-                let manaImg = manaSymbolImages[i]
-
-                manaImg.resize(radius, 0)
                 noStroke()
-                // write the letter in the middle of the rounded square about to
-                // be drawn with no stroke or fill
+                // draw the current mana symbol image
                 image(manaImg,
-                    startX + (radius + xMargin) * i,
-                    startY + textAscent()/2)
+                    startX + (radius + xMargin) * i - manaImg.width/2,
+                    startY - manaImg.height/2)
                 stroke(0, 0, 80, 20)
             } else {
                 noStroke()
                 // do the same here. we need there to be no stroke and no fill
                 image(manaImg,
-                    startX + (radius + xMargin) * i,
-                    startY + textAscent()/2)
+                    startX + (radius + xMargin) * i - manaImg.width/2,
+                    startY - manaImg.height/2)
                 stroke(colors[i])
             }
 
