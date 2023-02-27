@@ -90,19 +90,20 @@ class Strip {
 
             manaImg.resize(radius, 0)
 
-            fill(colors[i])
             if (!this.colorSelected(stripDictKeys[i])) {
-                fill(0, 0, 80, 20)
+                tint(0, 0, 80, 20)
 
                 noStroke()
-                // draw the current mana symbol image
+                // draw the current mana symbol image in the center of the
+                // current color selector after tinting it transparent white
                 image(manaImg,
                     startX + (radius + xMargin) * i - manaImg.width/2,
                     startY - manaImg.height/2)
                 stroke(0, 0, 80, 20)
             } else {
+                tint(colors[i])
                 noStroke()
-                // do the same here. we need there to be no stroke and no fill
+                // do the same here, tinting the color of the color selector
                 image(manaImg,
                     startX + (radius + xMargin) * i - manaImg.width/2,
                     startY - manaImg.height/2)
@@ -114,6 +115,9 @@ class Strip {
             rectMode(CENTER)
             square(startX + (radius + xMargin) * i, startY, radius * 2, rounding)
         }
+
+        // reset the tint
+        noTint()
     }
 
     // returns the current mana value of the strip, or the sum of all color
