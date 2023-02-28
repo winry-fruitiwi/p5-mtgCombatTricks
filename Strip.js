@@ -46,20 +46,20 @@ class Strip {
             g
         ]
 
-        // the starting x- and y-position of the dots
-        let startX = 50
-        let startY = 50
-
         // half of the length of the edge of the square so I can calculate
         // margin properly
-        let radius = 30
+        let radius = 15
 
         // the x-margin between each color representation and the next. There
         // will be no y-margin.
-        let xMargin = radius + 15
+        let xMargin = radius + 10
 
-        // how rounded the square will be
-        let rounding = 10
+        // // how rounded the square will be (obsolete)
+        // let rounding = 10
+
+        // the starting x- and y-position of the dots
+        let startX = radius + 1
+        let startY = radius + 1
 
         // the keys of the strip dictionary
         let stripDictKeys = Object.keys(this.stripDict)
@@ -77,7 +77,7 @@ class Strip {
         noStroke()
 
         // set the stroke weight
-        strokeWeight(4)
+        strokeWeight(2)
 
         // iterate through the dictionary using its length
         for (let i = 0; i < stripDictKeys.length; i++) {
@@ -85,10 +85,9 @@ class Strip {
             // y-coordinate should be startingY
             // set the color. if the color isn't selected, make the circle
             // hollow.
-
             let manaImg = manaSymbolImages[i]
 
-            manaImg.resize(radius, 0)
+            manaImg.resize(radius*1.5, 0)
 
             if (!this.colorSelected(stripDictKeys[i])) {
                 tint(0, 0, 80, 20)
@@ -113,7 +112,7 @@ class Strip {
             noFill()
 
             rectMode(CENTER)
-            square(startX + (radius + xMargin) * i, startY, radius * 2, rounding)
+            circle(startX + (radius + xMargin) * i, startY, radius * 2)
         }
 
         // reset the tint

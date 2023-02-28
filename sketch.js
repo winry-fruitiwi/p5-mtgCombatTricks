@@ -25,7 +25,7 @@ const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
 const SIDE_WIDTH = 60 // the width of the whitish sidebar
 const CARD_START_DISPLAY_X = 20 + SIDE_WIDTH // the x-pos of the first card
-const CARD_START_DISPLAY_Y = 110 // the y-pos of the first card
+const CARD_START_DISPLAY_Y = 55 // the y-pos of the first card
 const CARD_PADDING_X = 20 // x-padding of each card
 const CARD_PADDING_Y = 20 // y-padding of each card
 const X_DIST_TO_NEXT_CARD = CARD_WIDTH + CARD_PADDING_X
@@ -70,6 +70,8 @@ function setup() {
     p = loadImage("svg/p.svg")
 
     print(p)
+
+    // noSmooth()
 }
 
 
