@@ -1,6 +1,11 @@
 html, body {
     background-color: rgb(32, 33, 51);
     color: gainsboro;
+    background-image: url("backgrounds/bluetwilight.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
 }
 
 /*body::-webkit-scrollbar {*/
