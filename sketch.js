@@ -100,7 +100,9 @@ function gotData(data) {
 
 
 function draw() {
-    background(234, 34, 24)
+    // clear the canvas, then make a transparent background
+    clear()
+    background(234, 34, 24, 40)
 
     textAlign(LEFT)
     textSize(14)
@@ -189,7 +191,9 @@ function displayCardImages() {
             // half of all the padding and margin so that I can center the line
             // I'm about to draw.
             let halfAllSpacing = (CARD_PADDING_X + CARD_PADDING_Y + LINE_MARGIN)/2
+            erase()
             line(0, savedImgYPos - halfAllSpacing, width, savedImgYPos - halfAllSpacing)
+            noErase()
         }
 
         // reset the image x-position and update the y-position
