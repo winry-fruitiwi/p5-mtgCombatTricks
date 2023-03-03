@@ -1,5 +1,5 @@
 /**
- *  @author 
+ *  @author Winry
  *  @date 2023.1.20
  *
  */
@@ -14,8 +14,8 @@ let cardList = [] // a list of all cards in the set I'm querying from
 // let wMana
 // let cmv // total mana value of current mana pool
 let strip
-let cavalryImage // test image of Aeronaut Cavalry from BRO
 let cmcBuckets = {}
+let c, w, u, b, r, g, p // images for CWUBRG and Phyrexian mana symbols
 
 // constants
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
@@ -32,7 +32,6 @@ const X_DIST_TO_NEXT_CARD = CARD_WIDTH + CARD_PADDING_X
 const Y_DIST_TO_NEXT_CARD = CARD_HEIGHT + CARD_PADDING_Y
 const LINE_MARGIN = 20 // margin between lines
 const Y_DIST_TO_NEXT_CARD_ROW = CARD_HEIGHT + CARD_PADDING_Y * 2 + LINE_MARGIN
-let c, w, u, b, r, g, p // images for CWUBRG and Phyrexian mana symbols
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -54,11 +53,10 @@ function setup() {
         z → query</pre>`)
 
     debugCorner = new CanvasDebugCorner(5)
-    loadJSON("https://api.scryfall.com/cards/search?q=set:bro", gotData)
+    loadJSON("https://api.scryfall.com/cards/search?q=set:one", gotData)
 
     strip = new Strip()
 
-    cavalryImage = loadImage("images/AeronautCavalryTest.png")
     c = loadImage("svg/c.svg")
     w = loadImage("svg/w.svg")
     u = loadImage("svg/u.svg")
@@ -84,7 +82,7 @@ function gotData(data) {
         // there are often 5 jumpstart cards in every set (Zz was tricked by
         // one) so I hardcoded the maximum ID of cards in boosters. If the
         // current card's collector number is over the max ID, continue.
-        if (currentCard['collector_number'] > BRO_COLLECTOR_ID_CAP) {
+        if (currentCard['collector_number'] > ONE_COLLECTOR_ID_CAP) {
             continue
         }
 

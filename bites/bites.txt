@@ -45,10 +45,8 @@ p5-MTGCombatTricks
 
 
 add transparent background image
-    create backgrounds directory
-    use Zz's discord for finding background image and using it as a background
     use commands clear(); background(234, 34, 24, 40)
-    dim the background with a gradient
+    dim the background with a gradient (optional)
 rename strip.show() to strip.originalShow(), create strip.mtgPrimerShow()
     when unselected, mtgPrimerShow should have:
         transparent black stroke

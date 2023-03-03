@@ -84,7 +84,7 @@ class Strip {
             // draw a circle. x-coordinate should be startingX + (r + xMargin)*i
             // y-coordinate should be startingY
             // set the color. if the color isn't selected, make the circle
-            // hollow.
+            // hollow and transparent instead.
             let manaImg = manaSymbolImages[i]
 
             manaImg.resize(radius*1.5, 0)
@@ -111,7 +111,7 @@ class Strip {
 
             noFill()
 
-            rectMode(CENTER)
+            // draw the circle
             circle(startX + (radius + xMargin) * i, startY, radius * 2)
         }
 
