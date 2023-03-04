@@ -129,13 +129,23 @@ class Strip {
     show() {
         // a list of colors for each color represented in the strip
         let colors = [
-            [266, 7, 60], // c
-            [52, 15, 89], // w
-            [218, 45, 85], // u
-            [259, 13, 47], // b
-            [9, 69, 85], // r
-            [89, 100, 68] // g
+            [34, 6, 74], // c
+            [62, 20, 94], // w
+            [208, 20, 89], // u
+            [26, 10, 67], // b
+            [17, 54, 85], // r
+            [100, 27, 70] // g
         ]
+
+        // my old colors that I made myself
+        // let colors = [
+        //     [266, 7, 60], // c
+        //     [52, 15, 89], // w
+        //     [218, 45, 85], // u
+        //     [259, 13, 47], // b
+        //     [9, 69, 85], // r
+        //     [89, 100, 68] // g
+        // ]
 
         // a list of mana symbols for each color represented in Strip
         let manaSymbolImages = [

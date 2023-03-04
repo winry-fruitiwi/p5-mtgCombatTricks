@@ -44,18 +44,6 @@ p5-MTGCombatTricks
 			bonus to avoid annoying popups: display full card only as image pressed
 
 
-add transparent background image
-    use commands clear(); background(234, 34, 24, 40), get rid of background color rects
-    dim the background with a gradient (optional)
-rename strip.show() to strip.originalShow(), create strip.mtgPrimerShow()
-    when unselected, mtgPrimerShow should have:
-        transparent black stroke
-        transparent color fill
-        transparent black mana symbol
-    when selected, mtgPrimerShow should have:
-        black stroke
-        color fill
-        black mana symbol
 get Andrew Gioia manafont's colors for mana instead of ones I created on my drawing pad
     the easiest way to do this is to take a photo of mtgPrimer's and extract colors
 there are a lot of different textures in mtgprimer. maybe look into using some?

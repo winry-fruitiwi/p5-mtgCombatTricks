@@ -23,7 +23,7 @@ const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
-const SIDE_WIDTH = 60 // the width of the whitish sidebar
+const SIDE_WIDTH = 80 // the width of the whitish sidebar
 const CARD_START_DISPLAY_X = 20 + SIDE_WIDTH // the x-pos of the first card
 const CARD_START_DISPLAY_Y = 55 // the y-pos of the first card
 const CARD_PADDING_X = 20 // x-padding of each card
@@ -112,7 +112,7 @@ function draw() {
     debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
     debugCorner.showBottom()
 
-    textSize(30)
+    textSize(50)
     textAlign(CENTER)
 
     // this is just a test
@@ -136,8 +136,8 @@ function draw() {
 function displayCardImages() {
     // before anything else, draw a transparent rect from the top to the bottom
     // of the canvas with a constant width
-    fill(0, 0, 80, 60)
-    rect(0, 0, 60, height)
+    fill(0, 0, 80, 30)
+    rect(0, 0, SIDE_WIDTH, height)
 
     // the current image's position for the loops below
     let currentImgPos = new p5.Vector(CARD_START_DISPLAY_X, CARD_START_DISPLAY_Y)
@@ -206,8 +206,23 @@ function displayCardImages() {
         let cmcBucketDisplayX = SIDE_WIDTH/2
 
         let cmcBucketValue = Object.keys(cmcBuckets)[i]
+        stroke(0, 0, 0)
+        strokeWeight(2)
+        fill(34, 6, 74)
+
+        // constant that adjusts for numbers not being the tallest letter
+        const centeringConst = 2
+
+        // draw a gray circle behind the upcoming text with a black stroke,
+        // centered at the middle of the text
+        circle(cmcBucketDisplayX,
+            cmcBucketDisplayY - textAscent()/2 + centeringConst,
+            textAscent()*1.5)
+
+        fill(0, 0, 0)
         noStroke()
-        fill(237, 37, 20)
+
+        // draw text for the bucket's value
         text(str(cmcBucketValue), cmcBucketDisplayX, cmcBucketDisplayY)
     }
 
