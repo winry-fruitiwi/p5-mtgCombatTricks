@@ -43,11 +43,6 @@ p5-MTGCombatTricks
 			display full card when hovering
 			bonus to avoid annoying popups: display full card only as image pressed
 
-
-get Andrew Gioia manafont's colors for mana instead of ones I created on my drawing pad
-    the easiest way to do this is to take a photo of mtgPrimer's and extract colors
-there are a lot of different textures in mtgprimer. maybe look into using some?
-    find photos of textures online: light gray fabric, dark gray fabric with specks of lighter gray
-use svgs for cmc numbers or at least draw a gray non-transparent circle behind cmc number
-    are there svgs?
-when an image is clicked on, show it much larger until you click again or a key is pressed
+random background image every time you load the program
+    download all 5 Twilight images
+when an image is clicked on, show it much larger until you click again or a key is pressed (optional)
