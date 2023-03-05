@@ -67,9 +67,22 @@ function setup() {
     // not sure if we are going to use Phyrexian mana.
     p = loadImage("svg/p.svg")
 
-    print(p)
+    // Defining all our CSS styles
+    const myStyles = `
+    background-color: rgb(32, 33, 51);
+    color: gainsboro;
+    background-image: url("backgrounds/bluetwilight.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    `
+    const element = document.querySelector('html, body');
 
-    // noSmooth()
+    element.style.cssText = myStyles;
+
+    // const body = document.querySelector('html, body')
+    // body.style.backgroundImage("url(\"backgrounds/bluetwilight.png\")")
 }
 
 
