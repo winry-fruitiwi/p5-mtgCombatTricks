@@ -33,6 +33,14 @@ const Y_DIST_TO_NEXT_CARD = CARD_HEIGHT + CARD_PADDING_Y
 const LINE_MARGIN = 20 // margin between lines
 const Y_DIST_TO_NEXT_CARD_ROW = CARD_HEIGHT + CARD_PADDING_Y * 2 + LINE_MARGIN
 
+// constant list of backgrounds available, changes every format or when I find
+// a new cycle of bomb rares that I like the art for
+const BACKGROUNDS = ["whitetwilight.png",
+                    "bluetwilight.png",
+                    "blacktwilight.png",
+                    "redtwilight.png",
+                    ]
+
 function preload() {
     font = loadFont('data/consola.ttf')
     fixedWidthFont = loadFont('data/consola.ttf')
@@ -71,7 +79,7 @@ function setup() {
     const myStyles = `
     background-color: rgb(32, 33, 51);
     color: gainsboro;
-    background-image: url("backgrounds/bluetwilight.png");
+    background-image: url("backgrounds/` + random(BACKGROUNDS) + `");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
@@ -83,6 +91,13 @@ function setup() {
 
     // const body = document.querySelector('html, body')
     // body.style.backgroundImage("url(\"backgrounds/bluetwilight.png\")")
+
+    // findCMC tests
+    {
+        console.assert(findCMC("{1}") === "{1}")
+        console.assert(findCMC("{1}{U}") === "{1} {U}")
+        console.assert(findCMC("{U}{B}{G}") === "{U} {B} {G}")
+    }
 }
 
 
@@ -330,15 +345,29 @@ function keyPressed() {
                 // cardText += "\n" + card['type_line']
                 // cardText += "\n" + card['oracle_text']
 
+                let cmc = card['cmc']
+                let cardOracle = card['oracle_text']
+
+                if (cardOracle.indexOf("Affinity for") !== -1) {
+                    // mana color strings have the format {colorless}{color}...
+                    let colorlessManaCost = int(card["mana_cost"][1])
+                    cmc -= colorlessManaCost
+                }
+
+                if (cardOracle.indexOf("This spell costs ") !== -1 &&
+                    cardOracle.indexOf(" less to cast") !== -1) {
+
+                }
+
                 let cardText = loadImage(card['image_uris']['png'])
                 let cardText2 = loadImage(card['image_uris']['png'])
 
                 // image(cardText, 100, 800)
 
                 // initialize or get a CMC bucket.
-                let targetBucket = cmcBuckets[str(card['cmc'])] ?? []
+                let targetBucket = cmcBuckets[str(cmc)] ?? []
                 targetBucket.push([cardText, cardText2])
-                cmcBuckets[str(card['cmc'])] = targetBucket
+                cmcBuckets[str(cmc)] = targetBucket
             }
         }
 
@@ -380,6 +409,28 @@ function keyPressed() {
             console.log(color + "Mana is now " + strip.getColorMV(color))
         }
     }
+}
+
+
+// finds the CMC of any mana string
+function findCMC(manaString) {
+    // for every } that isn't the last character in the string, add a space to
+    // the "splittableManaString".
+    let splittableManaString = ""
+
+    for (let i=0; i<manaString.length; i++) {
+        let char = manaString[i]
+
+        splittableManaString += char
+
+        // checks if the character is } and it's not the last character in the
+        // string
+        if (char === "}" && i !== manaString.length - 1) {
+            splittableManaString += " "
+        }
+    }
+
+    return splittableManaString
 }
 
 
