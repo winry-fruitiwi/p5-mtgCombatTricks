@@ -16,6 +16,7 @@ let cardList = [] // a list of all cards in the set I'm querying from
 let strip
 let cmcBuckets = {}
 let c, w, u, b, r, g, p // images for CWUBRG and Phyrexian mana symbols
+let dc // drawing context
 
 // constants
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
@@ -94,10 +95,15 @@ function setup() {
 
     // findCMC tests
     {
-        console.assert(findCMC("{1}") === "{1}")
-        console.assert(findCMC("{1}{U}") === "{1} {U}")
-        console.assert(findCMC("{U}{B}{G}") === "{U} {B} {G}")
+        console.assert(findCMC("{1}") === 1)
+        console.assert(findCMC("{1}{U}") === 2)
+        console.assert(findCMC("{U}{B}{G}") === 3)
+        console.assert(findCMC("{5}{B}{G}") === 7)
+        console.assert(findCMC("{2}{B}{G}") === 4)
+        console.assert(findCMC("{X}{X}{G}{G}") === 2)
     }
+
+    dc = drawingContext
 }
 
 
@@ -136,9 +142,9 @@ function draw() {
     textSize(14)
 
     /* debugCorner needs to be last so its z-index is highest */
-    debugCorner.setText(`frameCount: ${frameCount}`, 2)
-    debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
-    debugCorner.showBottom()
+    // debugCorner.setText(`frameCount: ${frameCount}`, 2)
+    // debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
+    // debugCorner.showBottom()
 
     textSize(50)
     textAlign(CENTER)
@@ -154,6 +160,12 @@ function draw() {
 
     // b.resize(50, 0)
     // image(b, width/2, height/2)
+
+    // test
+    // stroke(0, 0, 100)
+    // strokeWeight(10)
+    // line(100, 100, 500, 500)
+    // filter(BLUR, 2)
 
     if (frameCount > 3000)
         noLoop()
@@ -190,16 +202,18 @@ function displayCardImages() {
                 currentImgPos.y += Y_DIST_TO_NEXT_CARD
             }
 
-            // resize the image every frame TODO find a way to not need this
+            // if user is hovering over image, save the image and enable the
+            // shadow
             if (currentImgPos.x < mouseX &&
                 mouseX < currentImgPos.x + CARD_WIDTH &&
 
                 currentImgPos.y < mouseY &&
                 mouseY < currentImgPos.y + CARD_WIDTH) {
                 savedImg = cmcBucket[j][1]
-                // img.resize(CARD_WIDTH * 1.5, 0)
+                // enable the drawing context shadow
+                enableDcShadow()
             }
-            // else
+            // resize the image every frame TODO find a way to not need this
             img.resize(CARD_WIDTH, 0)
 
             // display the image at the correct x- and y-position if the mouse
@@ -211,6 +225,9 @@ function displayCardImages() {
 
             // update the current image's position
             currentImgPos.x += X_DIST_TO_NEXT_CARD
+
+            // disable the shadow
+            resetDcShadow()
         }
         stroke(237, 37, 20)
         strokeWeight(20)
@@ -354,9 +371,18 @@ function keyPressed() {
                     cmc -= colorlessManaCost
                 }
 
-                if (cardOracle.indexOf("This spell costs ") !== -1 &&
+                else if (cardOracle.indexOf("This spell costs ") !== -1 &&
                     cardOracle.indexOf(" less to cast") !== -1) {
+                    let indexOfLessToCast = cardOracle.indexOf(" less to cast")
+                    let indexOfSpellCosts = cardOracle.indexOf("This spell" +
+                        " costs ") + "This spell costs ".length
 
+                    let manaString = cardOracle.slice(indexOfLessToCast,
+                        indexOfSpellCosts)
+
+                    let costReductionCMC = findCMC(manaString)
+
+                    cmc -= costReductionCMC
                 }
 
                 let cardText = loadImage(card['image_uris']['png'])
@@ -418,6 +444,9 @@ function findCMC(manaString) {
     // the "splittableManaString".
     let splittableManaString = ""
 
+    // the CMC of the mana string
+    let cmc = 0
+
     for (let i=0; i<manaString.length; i++) {
         let char = manaString[i]
 
@@ -430,7 +459,48 @@ function findCMC(manaString) {
         }
     }
 
-    return splittableManaString
+    // split the splittable mana string
+    let splitString = splittableManaString.split(" ")
+
+    // for each mana string in splitString, strip away the surrounding brackets
+    for (let mana of splitString) {
+        mana = mana.replace('{', '')
+        mana = mana.replace('}', '')
+        print("mana: " + mana)
+
+        if (int(mana)) {
+            let intMana = int(mana)
+            cmc += intMana
+        } else {
+            print("intMana does not exist")
+            if (mana !== "X") {
+                cmc++
+            }
+        }
+        print("cmc: " + cmc)
+
+    }
+
+    print("cmc: " + cmc)
+
+    return cmc
+}
+
+
+// resets the drawing context's shadow
+function resetDcShadow() {
+    dc.shadowBlur = 0
+    dc.shadowOffsetY = 0
+    dc.shadowOffsetX = 0
+}
+
+
+// turns on the drawing context's shadow/backglow
+function enableDcShadow() {
+    let milk = color(207, 7, 100)
+    /* call this before drawing an image */
+    dc.shadowBlur = 20
+    dc.shadowColor = milk
 }
 
 
