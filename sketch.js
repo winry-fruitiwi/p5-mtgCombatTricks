@@ -36,10 +36,10 @@ const Y_DIST_TO_NEXT_CARD_ROW = CARD_HEIGHT + CARD_PADDING_Y * 2 + LINE_MARGIN
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
-const BACKGROUNDS = ["whitetwilight.png",
-                    "bluetwilight.png",
-                    "blacktwilight.png",
-                    "redtwilight.png",
+const BACKGROUNDS = ["one/whitetwilight.png",
+                    "one/bluetwilight.png",
+                    "one/blacktwilight.png",
+                    "one/redtwilight.png",
                     ]
 
 function preload() {
@@ -365,18 +365,43 @@ function keyPressed() {
                 let cmc = card['cmc']
                 let cardOracle = card['oracle_text']
 
+                /*
+                    if the card's lowercase oracle text contains creature,
+                    it's probably a combat trick. it is also likely a combat
+                    trick if it says "any target". however, Essence Scatter
+                    is not a combat trick so I have to look out for that.
+
+                    Examples: Thrill of Possibility is not a combat trick,
+                    but Volt Charge is because it can target anything, not
+                    just creatures.
+
+                    The purpose of this is to eventually be part of a toggle
+                    that only inputs cards that are a trick when toggled on.
+                */
+
+                if (cardOracle.toLowerCase().indexOf("creature") !== -1 ||
+                    cardOracle.toLowerCase().indexOf("any target") !== -1) {
+                    // print the card name and its oracle
+                    print(card["name"] + " is a trick. oracle: " + cardOracle)
+                }
+
+                // if a card has "affinity for" in its name, remove all the
+                // colorless mana in its cost
                 if (cardOracle.indexOf("Affinity for") !== -1) {
                     // mana color strings have the format {colorless}{color}...
                     let colorlessManaCost = int(card["mana_cost"][1])
                     cmc -= colorlessManaCost
                 }
 
+                // if a card has cost reduction that isn't affinity, remove
+                // the cost reduction's cmc from the CMC.
                 else if (cardOracle.indexOf("This spell costs ") !== -1 &&
                     cardOracle.indexOf(" less to cast") !== -1) {
                     let indexOfLessToCast = cardOracle.indexOf(" less to cast")
                     let indexOfSpellCosts = cardOracle.indexOf("This spell" +
                         " costs ") + "This spell costs ".length
 
+                    // the mana string of the cost reduction's CMC
                     let manaString = cardOracle.slice(indexOfLessToCast,
                         indexOfSpellCosts)
 
@@ -495,7 +520,7 @@ function resetDcShadow() {
 }
 
 
-// turns on the drawing context's shadow/backglow
+// turns on the drawing context's shadow/back glow
 function enableDcShadow() {
     let milk = color(207, 7, 100)
     /* call this before drawing an image */

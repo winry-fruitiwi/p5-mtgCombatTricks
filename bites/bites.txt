@@ -43,6 +43,11 @@ p5-MTGCombatTricks
 			display full card when hovering
 			bonus to avoid annoying popups: display full card only as image pressed
 
-random background image every time you load the program
-    download all 5 Twilight images
-when an image is clicked on, show it much larger until you click again or a key is pressed (optional)
+add new file structure for set wallpapers:
+    backgrounds
+        one
+            img
+        bro
+            img
+        stx
+            img
