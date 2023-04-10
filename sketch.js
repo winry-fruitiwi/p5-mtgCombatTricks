@@ -17,10 +17,13 @@ let strip
 let cmcBuckets = {}
 let c, w, u, b, r, g, p // images for CWUBRG and Phyrexian mana symbols
 let dc // drawing context
+let state = 0 /* integer with values saying what to do when querying for cards.
+ States in function this variable is used in. */
 
 // constants
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
+const MOM_COLLECTOR_ID_CAP = 291 // constant for when MOM jumpstart cards start
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -33,14 +36,14 @@ const X_DIST_TO_NEXT_CARD = CARD_WIDTH + CARD_PADDING_X
 const Y_DIST_TO_NEXT_CARD = CARD_HEIGHT + CARD_PADDING_Y
 const LINE_MARGIN = 20 // margin between lines
 const Y_DIST_TO_NEXT_CARD_ROW = CARD_HEIGHT + CARD_PADDING_Y * 2 + LINE_MARGIN
+// the y-margin for the text describing the current state
+const STATE_TEXT_MARGIN = 10
+// a dictionary of names for the values that state can take on
+const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only non-tricks"}
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
-const BACKGROUNDS = ["one/whitetwilight.png",
-                    "one/bluetwilight.png",
-                    "one/blacktwilight.png",
-                    "one/redtwilight.png",
-                    ]
+const BACKGROUNDS = ["mom/angelicintervention.png"]
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -62,7 +65,7 @@ function setup() {
         z → query</pre>`)
 
     debugCorner = new CanvasDebugCorner(5)
-    loadJSON("https://api.scryfall.com/cards/search?q=set:one", gotData)
+    loadJSON("https://api.scryfall.com/cards/search?q=set:mom", gotData)
 
     strip = new Strip()
 
@@ -116,7 +119,7 @@ function gotData(data) {
         // there are often 5 jumpstart cards in every set (Zz was tricked by
         // one) so I hardcoded the maximum ID of cards in boosters. If the
         // current card's collector number is over the max ID, continue.
-        if (currentCard['collector_number'] > ONE_COLLECTOR_ID_CAP) {
+        if (currentCard['collector_number'] > MOM_COLLECTOR_ID_CAP) {
             continue
         }
 
@@ -157,6 +160,15 @@ function draw() {
     displayCardImages()
 
     strip.show()
+
+    // display the current state on the top-right of the screen. since text
+    // is displayed from the bottom-right in right align mode, the
+    // coordinates are the width of the screen and the textAscent() +
+    // stateTextMargin
+    textAlign(RIGHT)
+    textSize(20)
+    fill(0, 0, 100)
+    text("state: " + STATE_VALUES[state], width, textAscent() + STATE_TEXT_MARGIN)
 
     // b.resize(50, 0)
     // image(b, width/2, height/2)
@@ -366,10 +378,10 @@ function keyPressed() {
                 let cardOracle = card['oracle_text']
 
                 /*
-                    if the card's lowercase oracle text contains creature,
-                    it's probably a combat trick. it is also likely a combat
-                    trick if it says "any target". however, Essence Scatter
-                    is not a combat trick so I have to look out for that.
+                    If the card's lowercase oracle text contains creature,
+                    it's probably a combat trick. It is also likely a combat
+                    trick if it says "any target". However, Essence Scatter
+                    is not a combat trick, so I have to look out for that.
 
                     Examples: Thrill of Possibility is not a combat trick,
                     but Volt Charge is because it can target anything, not
@@ -379,10 +391,25 @@ function keyPressed() {
                     that only inputs cards that are a trick when toggled on.
                 */
 
-                if (cardOracle.toLowerCase().indexOf("creature") !== -1 ||
-                    cardOracle.toLowerCase().indexOf("any target") !== -1) {
-                    // print the card name and its oracle
+                // skip the card if the card oracle does not contain
+                // "creature" or "any target" and the state is equal to
+                // "tricks only"
+                if (((cardOracle.toLowerCase().indexOf("creature") !== -1 ||
+                    cardOracle.toLowerCase().indexOf("any target") !== -1) &&
+                    state === 2)) {
+                    // print the card name and its oracle, then avoid adding
+                    // the card to the cards to be displayed
                     print(card["name"] + " is a trick. oracle: " + cardOracle)
+                    continue
+                }
+
+                if ((!(cardOracle.toLowerCase().indexOf("creature") !== -1 ||
+                        cardOracle.toLowerCase().indexOf("any target") !== -1) &&
+                    state === 1)) {
+                    // print the card name and its oracle, then avoid adding
+                    // the card to the cards to be displayed
+                    print(card["name"] + " is not a trick. oracle: " + cardOracle)
+                    continue
                 }
 
                 // if a card has "affinity for" in its name, remove all the
@@ -460,6 +487,12 @@ function keyPressed() {
             console.log(color + "Mana is now " + strip.getColorMV(color))
         }
     }
+
+    // if T is pressed, call updateState()
+    if (key === "t") {
+        updateState()
+        print("state is now " + state)
+    }
 }
 
 
@@ -526,6 +559,21 @@ function enableDcShadow() {
     /* call this before drawing an image */
     dc.shadowBlur = 20
     dc.shadowColor = milk
+}
+
+
+/* increments state and wraps it around to state 0. States:
+     state=0: both tricks and non-tricks
+     state=1: only tricks
+     state=2: only non-tricks
+*/
+function updateState() {
+    state++
+
+    // if the state is now over the limit, reset it
+    if (state > 2) {
+        state = 0
+    }
 }
 
 
