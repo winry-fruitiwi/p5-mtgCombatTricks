@@ -15,6 +15,7 @@ let cardList = [] // a list of all cards in the set I'm querying from
 // let cmv // total mana value of current mana pool
 let strip
 let cmcBuckets = {}
+// convokeCards: same as cmcBuckets, but for convoke cards.
 let c, w, u, b, r, g, p // images for CWUBRG and Phyrexian mana symbols
 let dc // drawing context
 let state = 0 /* integer with values saying what to do when querying for cards.
@@ -195,6 +196,8 @@ function displayCardImages() {
     let currentImgPos = new p5.Vector(CARD_START_DISPLAY_X, CARD_START_DISPLAY_Y)
     let savedImg
 
+    // TODO add separate loop that displays convokeCards after adding a
+    // "CONVOKE SPELLS" divider.
     for (let i=0; i<Object.keys(cmcBuckets).length; i++) {
         // the selected cmc bucket
         let cmcBucket = cmcBuckets[Object.keys(cmcBuckets)[i]]
@@ -436,6 +439,9 @@ function keyPressed() {
 
                     cmc -= costReductionCMC
                 }
+
+                // If Convoke is in the card's oracle:
+                    // add it to convokeCards instead of cmcBuckets
 
                 let cardText = loadImage(card['image_uris']['png'])
                 let cardText2 = loadImage(card['image_uris']['png'])
