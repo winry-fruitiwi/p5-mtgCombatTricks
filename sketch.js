@@ -16,6 +16,7 @@ let cardList = [] // a list of all cards in the set I'm querying from
 let strip
 let cmcBuckets = {}
 // convokeCards: same as cmcBuckets, but for convoke cards.
+let convokeCards = {}
 let c, w, u, b, r, g, p // images for CWUBRG and Phyrexian mana symbols
 let dc // drawing context
 let state = 0 /* integer with values saying what to do when querying for cards.
@@ -440,8 +441,13 @@ function keyPressed() {
                     cmc -= costReductionCMC
                 }
 
+                let buckets = cmcBuckets
                 // If Convoke is in the card's oracle:
+                if (cardOracle.indexOf("Convoke") !== -1) {
                     // add it to convokeCards instead of cmcBuckets
+                    buckets = convokeCards
+                }
+
 
                 let cardText = loadImage(card['image_uris']['png'])
                 let cardText2 = loadImage(card['image_uris']['png'])
@@ -449,9 +455,9 @@ function keyPressed() {
                 // image(cardText, 100, 800)
 
                 // initialize or get a CMC bucket.
-                let targetBucket = cmcBuckets[str(cmc)] ?? []
+                let targetBucket = buckets[str(cmc)] ?? []
                 targetBucket.push([cardText, cardText2])
-                cmcBuckets[str(cmc)] = targetBucket
+                buckets[str(cmc)] = targetBucket
             }
         }
 
