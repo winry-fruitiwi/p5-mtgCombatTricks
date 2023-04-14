@@ -44,7 +44,11 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
-const BACKGROUNDS = ["mom/angelicintervention.png"]
+const BACKGROUNDS = ["mom/angelicintervention.png",
+    "mom/archangelelspeth.png",
+    "mom/theargentetchings.png",
+    "mom/eleshnorn.png",
+    "mom/radiantheliod.png",]
 
 function preload() {
     font = loadFont('data/consola.ttf')
