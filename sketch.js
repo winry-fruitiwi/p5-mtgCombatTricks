@@ -84,16 +84,29 @@ function setup() {
     // not sure if we are going to use Phyrexian mana.
     p = loadImage("svg/p.svg")
 
-    // Defining all our CSS styles
+    // Defining all our CSS styles.
+    /*
+      Background color is the default color for if the background image
+      isn't loaded for some reason. I don't know what "gainsboro" means! My
+      best guess is that it colors the text of the "what this program does"
+      part of the webpage. The background image is a random image from the
+      hard-coded BACKGROUNDS constant. background-repeat: no-repeat;
+      prevents the image from repeating if it's too small. The rest of the
+      styles cover the background staying where it is, its top edge always being
+      visible, and the background image covering the entire background.
+    */
     const myStyles = `
     background-color: rgb(32, 33, 51);
     color: gainsboro;
     background-image: url("backgrounds/` + random(BACKGROUNDS) + `");
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-position: center;
+    background-position: top;
     background-size: cover;
     `
+
+    // make element the html's body and assign myStyles to it. This will
+    // give it a random background image and properly colored text.
     const element = document.querySelector('html, body');
 
     element.style.cssText = myStyles;
