@@ -25,6 +25,7 @@ let state = 0 /* integer with values saying what to do when querying for cards.
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
 const MOM_COLLECTOR_ID_CAP = 291 // constant for when MOM jumpstart cards start
+const LTR_COLLECTOR_ID_CAP = 281
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -44,11 +45,7 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
-const BACKGROUNDS = ["mom/angelicintervention.png",
-    "mom/archangelelspeth.png",
-    "mom/theargentetchings.png",
-    "mom/eleshnorn.png",
-    "mom/radiantheliod.png",]
+const BACKGROUNDS = []
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -70,7 +67,7 @@ function setup() {
         z → query</pre>`)
 
     debugCorner = new CanvasDebugCorner(5)
-    loadJSON("https://api.scryfall.com/cards/search?q=set:mom", gotData)
+    loadJSON("https://api.scryfall.com/cards/search?q=set:ltr", gotData)
 
     strip = new Strip()
 
@@ -137,7 +134,7 @@ function gotData(data) {
         // there are often 5 jumpstart cards in every set (Zz was tricked by
         // one) so I hardcoded the maximum ID of cards in boosters. If the
         // current card's collector number is over the max ID, continue.
-        if (currentCard['collector_number'] > MOM_COLLECTOR_ID_CAP) {
+        if (currentCard['collector_number'] > LTR_COLLECTOR_ID_CAP) {
             continue
         }
 
