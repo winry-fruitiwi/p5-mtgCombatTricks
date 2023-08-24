@@ -26,6 +26,7 @@ const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
 const MOM_COLLECTOR_ID_CAP = 291 // constant for when MOM jumpstart cards start
 const LTR_COLLECTOR_ID_CAP = 281
+const WOE_COLLECTOR_ID_CAP = 261
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -45,9 +46,11 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
-const BACKGROUNDS = ["ltr/thering.png",
-    "ltr/sting.png",
-    "ltr/palantir.png"]
+const BACKGROUNDS = [
+    "woe/pie_wielder.png",
+    "woe/knight_of_doves.png",
+    "woe/moonshakers.png"
+]
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -69,7 +72,7 @@ function setup() {
         z → query</pre>`)
 
     debugCorner = new CanvasDebugCorner(5)
-    loadJSON("https://api.scryfall.com/cards/search?q=set:ltr", gotData)
+    loadJSON("https://api.scryfall.com/cards/search?q=set:woe", gotData)
 
     strip = new Strip()
 
