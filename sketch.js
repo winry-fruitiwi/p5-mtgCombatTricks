@@ -49,7 +49,9 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 const BACKGROUNDS = [
     "woe/pie_wielder.png",
     "woe/knight_of_doves.png",
-    "woe/moonshakers.png"
+    "woe/moonshakers.png",
+    "woe/porridge.png",
+    "woe/archon.png"
 ]
 
 function preload() {
@@ -379,19 +381,21 @@ function keyPressed() {
             */
             if ((card['type_line'] === "Instant" ||
                 card['keywords'].indexOf("Flash") !== -1) &&
-                (strip.colorsSelected().indexOf(...card['colors']) !== -1 ||
-                card['colors'].length === 0)
+                (card['colors'].length === 0)
             ) {
-                // // the text of the card I want to print. Will become obsolete
-                // // when photos are used instead.
-                // let cardText = ''
-                // // add the name, mana cost, and CMC to the card text.
-                // cardText += card['name'] + " " + card['mana_cost']
-                // cardText += " " + card["cmc"]
-                //
-                // // add the type line (usually Instant) and oracle text.
-                // cardText += "\n" + card['type_line']
-                // cardText += "\n" + card['oracle_text']
+                // flag that checks if the card is within the current colors
+                let notWithinColors = false
+                // for every color in the card's colors:
+                for (let color of card["colors"]) {
+                    // check if it's within the current colors
+                    if (!(color in strip.colorsSelected())) {
+                        notWithinColors = true
+                        break
+                    }
+                }
+                if (notWithinColors) {
+                    continue
+                }
 
                 let cmc = card['cmc']
                 let cardOracle = card['oracle_text']
