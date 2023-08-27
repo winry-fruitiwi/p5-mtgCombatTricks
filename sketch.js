@@ -380,15 +380,15 @@ function keyPressed() {
                 in the current mana pool's colors. Colorless cards are included.
             */
             if ((card['type_line'] === "Instant" ||
-                card['keywords'].indexOf("Flash") !== -1) &&
-                (card['colors'].length === 0)
+                card['keywords'].indexOf("Flash") !== -1)
             ) {
                 // flag that checks if the card is within the current colors
                 let notWithinColors = false
                 // for every color in the card's colors:
                 for (let color of card["colors"]) {
                     // check if it's within the current colors
-                    if (!(color in strip.colorsSelected())) {
+                    if (!(strip.colorsSelected().includes(color))) {
+                        console.log(`${color} is not in ${strip.colorsSelected()}`)
                         notWithinColors = true
                         break
                     }
@@ -490,11 +490,6 @@ function keyPressed() {
         //         img.width = 240
         //     }
         // }
-
-        // print all the cards in buckets
-        print(cmcBuckets)
-
-        print("\n")
     }
 
     // the color that the key is. Since JavaScript dictionary access is
@@ -522,7 +517,6 @@ function keyPressed() {
     // if T is pressed, call updateState()
     if (key === "t") {
         updateState()
-        print("state is now " + state)
     }
 }
 
@@ -555,22 +549,17 @@ function findCMC(manaString) {
     for (let mana of splitString) {
         mana = mana.replace('{', '')
         mana = mana.replace('}', '')
-        print("mana: " + mana)
 
         if (int(mana)) {
             let intMana = int(mana)
             cmc += intMana
         } else {
-            print("intMana does not exist")
             if (mana !== "X") {
                 cmc++
             }
         }
-        print("cmc: " + cmc)
 
     }
-
-    print("cmc: " + cmc)
 
     return cmc
 }

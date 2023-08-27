@@ -271,8 +271,9 @@ class Strip {
         // the list of selected colors
         let selectedColors = []
 
+        // for every color in the strip dict, push it to a list of selected
+        // colors
         for (let color in this.stripDict) {
-            let selectedColor = this.stripDict[color]
             if (this.colorSelected(color)) {
                 selectedColors.push(color.toUpperCase())
             }
