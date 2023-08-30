@@ -145,8 +145,58 @@ function gotData(data) {
             continue
         }
 
-        // append the current card to the card list
-        cardList.push(currentCard)
+        let keywords = currentCard["keywords"]
+
+        if (currentCard['card_faces']) {
+            for (let face of currentCard['card_faces']) {
+                let oracle = face["oracle_text"]
+
+                if (oracle.includes(`You may cast ${face["name"]} as though it had flash if you pay {`)
+                    && oracle.includes(`} more to cast it`)) {
+                    keywords.push("Flash")
+
+                    print("can pay to flash in")
+                }
+
+                let condensedCard = {
+                    "type_line": face["type_line"],
+                    "keywords": keywords,
+                    "colors": findColors(face["mana_cost"]),
+                    "cmc": findCMC(face["mana_cost"]),
+                    "oracle_text": face["oracle_text"],
+                    "name": face["name"],
+                    "mana_cost": face["mana_cost"],
+                    "png": currentCard["image_uris"]["png"]
+                }
+
+                // append the current card to the card list
+                cardList.push(condensedCard)
+            }
+        }
+
+        else {
+            let oracle = currentCard["oracle_text"]
+
+            if (oracle.includes(`You may cast ${currentCard["name"]} as though it had flash if you pay {`)
+                && oracle.includes(`} more to cast it`)) {
+                keywords.push("Flash")
+                print("can pay to flash in")
+            }
+
+            let condensedCard = {
+                "type_line": currentCard["type_line"],
+                "keywords": keywords,
+                "colors": currentCard["colors"],
+                "cmc": currentCard["cmc"],
+                "oracle_text": currentCard["oracle_text"],
+                "name": currentCard["name"],
+                "mana_cost": currentCard["mana_cost"],
+                "png": currentCard["image_uris"]["png"]
+            }
+
+            // append the current card to the card list
+            cardList.push(condensedCard)
+        }
     }
 
     // Scryfall only allows 175 cards or so per query, so sometimes they will
@@ -379,7 +429,7 @@ function keyPressed() {
                 Check if the card is an instant or has titlecase Flash and is
                 in the current mana pool's colors. Colorless cards are included.
             */
-            if ((card['type_line'] === "Instant" ||
+            if ((card['type_line'].indexOf("Instant") !== -1 ||
                 card['keywords'].indexOf("Flash") !== -1)
             ) {
                 // flag that checks if the card is within the current colors
@@ -467,9 +517,8 @@ function keyPressed() {
                     cmc = 0
                 }
 
-
-                let cardText = loadImage(card['image_uris']['png'])
-                let cardText2 = loadImage(card['image_uris']['png'])
+                let cardText = loadImage(card['png'])
+                let cardText2 = loadImage(card['png'])
 
                 // image(cardText, 100, 800)
 
@@ -562,6 +611,23 @@ function findCMC(manaString) {
     }
 
     return cmc
+}
+
+
+// finds colors of mana string
+function findColors(manaString) {
+    let colors = []
+
+    for (let manaSymbol of manaString) {
+        if (manaSymbol === "W" || manaSymbol === "U" || manaSymbol === "B" ||
+            manaSymbol === "R" || manaSymbol === "G") {
+            if (!(colors.includes(manaSymbol))) {
+                colors.push(manaSymbol)
+            }
+        }
+    }
+
+    return colors
 }
 
 
