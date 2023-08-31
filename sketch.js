@@ -150,19 +150,22 @@ function gotData(data) {
         if (currentCard['card_faces']) {
             for (let face of currentCard['card_faces']) {
                 let oracle = face["oracle_text"]
+                let cmc = findCMC(face["mana_cost"])
 
                 if (oracle.includes(`You may cast ${face["name"]} as though it had flash if you pay {`)
                     && oracle.includes(`} more to cast it`)) {
                     keywords.push("Flash")
 
                     print("can pay to flash in")
+
+                    cmc += 2
                 }
 
                 let condensedCard = {
                     "type_line": face["type_line"],
                     "keywords": keywords,
                     "colors": findColors(face["mana_cost"]),
-                    "cmc": findCMC(face["mana_cost"]),
+                    "cmc": cmc,
                     "oracle_text": face["oracle_text"],
                     "name": face["name"],
                     "mana_cost": face["mana_cost"],
@@ -176,18 +179,21 @@ function gotData(data) {
 
         else {
             let oracle = currentCard["oracle_text"]
+            let cmc = findCMC(currentCard["mana_cost"])
 
             if (oracle.includes(`You may cast ${currentCard["name"]} as though it had flash if you pay {`)
                 && oracle.includes(`} more to cast it`)) {
                 keywords.push("Flash")
                 print("can pay to flash in")
+
+                cmc += 2
             }
 
             let condensedCard = {
                 "type_line": currentCard["type_line"],
                 "keywords": keywords,
                 "colors": currentCard["colors"],
-                "cmc": currentCard["cmc"],
+                "cmc": cmc,
                 "oracle_text": currentCard["oracle_text"],
                 "name": currentCard["name"],
                 "mana_cost": currentCard["mana_cost"],
@@ -438,7 +444,6 @@ function keyPressed() {
                 for (let color of card["colors"]) {
                     // check if it's within the current colors
                     if (!(strip.colorsSelected().includes(color))) {
-                        console.log(`${color} is not in ${strip.colorsSelected()}`)
                         notWithinColors = true
                         break
                     }
@@ -450,7 +455,7 @@ function keyPressed() {
                 let cmc = card['cmc']
                 let cardOracle = card['oracle_text']
 
-                /*
+                    /*
                     If the card's lowercase oracle text contains creature,
                     it's probably a combat trick. It is also likely a combat
                     trick if it says "any target". However, Essence Scatter
@@ -497,17 +502,20 @@ function keyPressed() {
                 // the cost reduction's cmc from the CMC.
                 else if (cardOracle.indexOf("This spell costs ") !== -1 &&
                     cardOracle.indexOf(" less to cast") !== -1) {
-                    let indexOfLessToCast = cardOracle.indexOf(" less to cast")
+                    let indexOfLessToCast = cardOracle.indexOf(" less to" +
+                            " cast") - 1
                     let indexOfSpellCosts = cardOracle.indexOf("This spell" +
                         " costs ") + "This spell costs ".length
 
                     // the mana string of the cost reduction's CMC
-                    let manaString = cardOracle.slice(indexOfLessToCast,
-                        indexOfSpellCosts)
+                    let manaString = cardOracle.slice(indexOfSpellCosts,
+                        indexOfLessToCast)
 
                     let costReductionCMC = findCMC(manaString)
 
                     cmc -= costReductionCMC
+
+                    console.log(indexOfLessToCast, indexOfSpellCosts)
                 }
 
                 // If Convoke is in the card's oracle:
