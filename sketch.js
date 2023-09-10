@@ -560,13 +560,7 @@ function keyPressed() {
         // Note: I helped Zz implement this function when he was writing his
         // mtgCombatTricks, which is why I remembered the algorithm so fast.
         if (color === key) {
-            strip.incrementColor(color)
-            console.log(color + "Mana is now " + strip.getColorMV(color))
-        }
-
-        // otherwise, decrement the color because the key is uppercase.
-        else {
-            strip.decrementColor(color)
+            strip.toggleColorOn(color)
             console.log(color + "Mana is now " + strip.getColorMV(color))
         }
     }

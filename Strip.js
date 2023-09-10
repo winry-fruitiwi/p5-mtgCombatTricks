@@ -13,15 +13,9 @@ class Strip {
     }
 
     // increments value of a color
-    incrementColor(color) {
+    toggleColorOn(color) {
         let selectedColor = this.stripDict[color]
-        selectedColor.incrementMV()
-    }
-
-    // decrements value of a color
-    decrementColor(color) {
-        let selectedColor = this.stripDict[color]
-        selectedColor.decrementMV()
+        selectedColor.toggleColor()
     }
 
     // renders the strip with SVGs, to be implemented much later.
@@ -263,7 +257,7 @@ class Strip {
     // checks if the given color is selected
     colorSelected(color) {
         let selectedColor = this.stripDict[color]
-        return selectedColor.getMV() !== 0
+        return selectedColor.ifOn()
     }
 
     // returns a list of all colors that have been selected
@@ -284,6 +278,6 @@ class Strip {
 
     getColorMV(color) {
         let selectedColor = this.stripDict[color]
-        return selectedColor.getMV()
+        return selectedColor.ifOn()
     }
 }
