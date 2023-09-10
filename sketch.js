@@ -297,7 +297,7 @@ function displayCardImages() {
                 mouseX < currentImgPos.x + CARD_WIDTH &&
 
                 currentImgPos.y < mouseY &&
-                mouseY < currentImgPos.y + CARD_WIDTH) {
+                mouseY < currentImgPos.y + CARD_HEIGHT) {
                 savedImg = cmcBucket[j][1]
                 // enable the drawing context shadow
                 enableDcShadow()
