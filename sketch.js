@@ -665,6 +665,12 @@ function updateState() {
 }
 
 
+function mousePressed() {
+    console.log("Mouse clicked!")
+    strip.checkIfMouseClickedSelector()
+}
+
+
 /** 🧹 shows debugging info using text() 🧹 */
 class CanvasDebugCorner {
     constructor(lines) {
