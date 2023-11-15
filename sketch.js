@@ -22,11 +22,13 @@ let state = 0 /* integer with values saying what to do when querying for cards.
  States in function this variable is used in. */
 
 // constants
+const SET_CODE = "lci"
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
 const MOM_COLLECTOR_ID_CAP = 291 // constant for when MOM jumpstart cards start
 const LTR_COLLECTOR_ID_CAP = 281
 const WOE_COLLECTOR_ID_CAP = 261
+const LCI_COLLECTOR_ID_CAP = 286
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -74,7 +76,7 @@ function setup() {
         z → query</pre>`)
 
     debugCorner = new CanvasDebugCorner(5)
-    loadJSON("https://api.scryfall.com/cards/search?q=set:woe", gotData)
+    loadJSON(`https://api.scryfall.com/cards/search?q=set:${SET_CODE}`, gotData)
 
     strip = new Strip()
 
@@ -141,7 +143,7 @@ function gotData(data) {
         // there are often 5 jumpstart cards in every set (Zz was tricked by
         // one) so I hardcoded the maximum ID of cards in boosters. If the
         // current card's collector number is over the max ID, continue.
-        if (currentCard['collector_number'] > LTR_COLLECTOR_ID_CAP) {
+        if (currentCard['collector_number'] > LCI_COLLECTOR_ID_CAP) {
             continue
         }
 
@@ -257,8 +259,8 @@ function draw() {
     // line(100, 100, 500, 500)
     // filter(BLUR, 2)
 
-    if (frameCount > 3000)
-        noLoop()
+    // if (frameCount > 3000)
+    //     noLoop()
 }
 
 
