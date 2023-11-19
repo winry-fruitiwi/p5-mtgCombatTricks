@@ -117,9 +117,6 @@ function setup() {
 
     element.style.cssText = myStyles;
 
-    // const body = document.querySelector('html, body')
-    // body.style.backgroundImage("url(\"backgrounds/bluetwilight.png\")")
-
     // findCMC tests
     {
         console.assert(findCMC("{1}") === 1)
@@ -136,6 +133,35 @@ function setup() {
 
 // callback function for loadJSON when loading a page of the API for a Magic set
 function gotData(data) {
+    // optimization so that set code collector ID cap changes automatically
+    // based on the currently selected set
+    let collectorIDCap
+    switch (SET_CODE) {
+        case "lci":
+            collectorIDCap = LCI_COLLECTOR_ID_CAP
+            break
+
+        case "woe":
+            collectorIDCap = WOE_COLLECTOR_ID_CAP
+            break
+
+        case "one":
+            collectorIDCap = ONE_COLLECTOR_ID_CAP
+            break
+
+        case "bro":
+            collectorIDCap = BRO_COLLECTOR_ID_CAP
+            break
+
+        case "mom":
+            collectorIDCap = MOM_COLLECTOR_ID_CAP
+            break
+
+        case "ltr":
+            collectorIDCap = LTR_COLLECTOR_ID_CAP
+            break
+    }
+
     // loop through all the keys in data
     for (let i = 0; i < Object.keys(data["data"]).length; i++) {
         let currentCard = data["data"][i]
@@ -143,13 +169,43 @@ function gotData(data) {
         // there are often 5 jumpstart cards in every set (Zz was tricked by
         // one) so I hardcoded the maximum ID of cards in boosters. If the
         // current card's collector number is over the max ID, continue.
-        if (currentCard['collector_number'] > LCI_COLLECTOR_ID_CAP) {
+        if (currentCard['collector_number'] > collectorIDCap) {
             continue
         }
 
         let keywords = currentCard["keywords"]
 
-        if (currentCard['card_faces']) {
+        // if image_uris doesn't exist, then the card is not an adventure but
+        // still has two faces
+        if (!(currentCard["image_uris"])) {
+            let frontFace = currentCard["card_faces"][0]
+            let oracle = frontFace["oracle_text"]
+            let cmc = findCMC(frontFace["mana_cost"])
+
+            if (oracle.includes(`You may cast ${frontFace["name"]} as though it had flash if you pay {`)
+                && oracle.includes(`} more to cast it`)) {
+                keywords.push("Flash")
+                print("can pay to flash in")
+
+                cmc += 2
+            }
+
+            let condensedCard = {
+                "type_line": currentCard["type_line"],
+                "keywords": keywords,
+                "colors": currentCard["colors"],
+                "cmc": cmc,
+                "oracle_text": currentCard["oracle_text"],
+                "name": currentCard["name"],
+                "mana_cost": currentCard["mana_cost"],
+                "png": frontFace["image_uris"]["png"]
+            }
+
+            // append the current card to the card list
+            cardList.push(condensedCard)
+        }
+
+        else if (currentCard['card_faces']) {
             for (let face of currentCard['card_faces']) {
                 let oracle = face["oracle_text"]
                 let cmc = findCMC(face["mana_cost"])
@@ -160,10 +216,12 @@ function gotData(data) {
 
                     print("can pay to flash in")
 
-                    cmc += 2
+                    cmc += 2 // assuming that the "pay to flash" cost stays at 2
                 }
 
-                let condensedCard = {
+                let condensedCard
+
+                condensedCard = {
                     "type_line": face["type_line"],
                     "keywords": keywords,
                     "colors": findColors(face["mana_cost"]),
