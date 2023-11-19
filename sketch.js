@@ -193,9 +193,9 @@ function gotData(data) {
             let condensedCard = {
                 "type_line": currentCard["type_line"],
                 "keywords": keywords,
-                "colors": currentCard["colors"],
+                "colors": frontFace["colors"],
                 "cmc": cmc,
-                "oracle_text": currentCard["oracle_text"],
+                "oracle_text": frontFace["oracle_text"],
                 "name": currentCard["name"],
                 "mana_cost": currentCard["mana_cost"],
                 "png": frontFace["image_uris"]["png"]
