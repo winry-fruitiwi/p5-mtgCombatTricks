@@ -496,7 +496,8 @@ function keyPressed() {
                 in the current mana pool's colors. Colorless cards are included.
             */
             if ((card['type_line'].indexOf("Instant") !== -1 ||
-                card['keywords'].indexOf("Flash") !== -1)
+                card['keywords'].indexOf("Flash") !== -1) ||
+                card['oracle_text'].indexOf(`Discard ${card["name"]}`) !== -1
             ) {
                 // flag that checks if the card is within the current colors
                 let notWithinColors = false
