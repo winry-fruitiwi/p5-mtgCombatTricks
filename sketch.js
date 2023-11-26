@@ -499,6 +499,7 @@ function keyPressed() {
                 card['keywords'].indexOf("Flash") !== -1) ||
                 card['oracle_text'].indexOf(`Discard ${card["name"]}`) !== -1
             ) {
+
                 // flag that checks if the card is within the current colors
                 let notWithinColors = false
                 // for every color in the card's colors:
@@ -516,7 +517,37 @@ function keyPressed() {
                 let cmc = card['cmc']
                 let cardOracle = card['oracle_text']
 
-                    /*
+                let discardIndex = card['oracle_text'].indexOf(`Discard ${card["name"]}`)
+                if (discardIndex !== -1) {
+                    // mc string start/end
+                    let mcStart = 0
+                    let mcEnd = 0
+                    let ifFirstRightBracket = false
+
+                    for (let i = discardIndex; i > 0; i--) {
+                        let charI = cardOracle[i]
+
+                        // if we're at a newline, that means we've reached
+                        // the end of the mc end string
+                        if (charI === "\n") {
+                            if (mcEnd === 0)
+                                mcEnd = i
+                            mcStart = i
+                            break
+                        }
+
+                        // if this is the first right bracket we've seen,
+                        // track the mana cost end
+                        if (charI === "}" && !ifFirstRightBracket) {
+                            mcEnd = i
+                            ifFirstRightBracket = true
+                        }
+                    }
+
+                    cmc = findCMC(cardOracle.slice(mcStart, mcEnd))
+                }
+
+                /*
                     If the card's lowercase oracle text contains creature,
                     it's probably a combat trick. It is also likely a combat
                     trick if it says "any target". However, Essence Scatter
