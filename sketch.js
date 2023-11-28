@@ -22,7 +22,8 @@ let state = 0 /* integer with values saying what to do when querying for cards.
  States in function this variable is used in. */
 
 // constants
-const SET_CODE = "lci"
+const SET_CODE = "neo"
+const NEO_COLLECTOR_ID_CAP = 302 // constant for when NEO jumpstart cards start
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
 const MOM_COLLECTOR_ID_CAP = 291 // constant for when MOM jumpstart cards start
@@ -159,6 +160,10 @@ function gotData(data) {
 
         case "ltr":
             collectorIDCap = LTR_COLLECTOR_ID_CAP
+            break
+
+        case "neo":
+            collectorIDCap = NEO_COLLECTOR_ID_CAP
             break
     }
 
@@ -532,19 +537,21 @@ function keyPressed() {
                         if (charI === "\n") {
                             if (mcEnd === 0)
                                 mcEnd = i
-                            mcStart = i
+                            mcStart = i + 1
                             break
                         }
 
                         // if this is the first right bracket we've seen,
                         // track the mana cost end
                         if (charI === "}" && !ifFirstRightBracket) {
-                            mcEnd = i
+                            mcEnd = i + 1
                             ifFirstRightBracket = true
                         }
                     }
 
                     cmc = findCMC(cardOracle.slice(mcStart, mcEnd))
+
+                    print(cardOracle.slice(mcStart, mcEnd))
                 }
 
                 /*
@@ -697,8 +704,10 @@ function findCMC(manaString) {
             let intMana = int(mana)
             cmc += intMana
         } else {
-            if (mana !== "X") {
+            if (mana !== "X" && mana !== "Channel" && mana !== "—") {
                 cmc++
+            } else {
+                print(mana + " was found in this string")
             }
         }
 
