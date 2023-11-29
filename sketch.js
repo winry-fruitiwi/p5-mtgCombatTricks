@@ -179,6 +179,54 @@ function gotData(data) {
         }
 
         let keywords = currentCard["keywords"]
+        let cardOracle = currentCard['oracle_text']
+
+        let discardIndex = cardOracle.indexOf(`Discard ${currentCard["name"]}`)
+
+        if (discardIndex !== -1) {
+            // mc string start/end
+            let mcStart = 0
+            let mcEnd = 0
+            let ifFirstRightBracket = false
+
+            for (let i = discardIndex; i > 0; i--) {
+                let charI = cardOracle[i]
+
+                // if we're at a newline, that means we've reached
+                // the end of the mc end string
+                if (charI === "\n") {
+                    if (mcEnd === 0)
+                        mcEnd = i
+                    mcStart = i + 1
+                    break
+                }
+
+                // if this is the first right bracket we've seen,
+                // track the mana cost end
+                if (charI === "}" && !ifFirstRightBracket) {
+                    mcEnd = i + 1
+                    ifFirstRightBracket = true
+                }
+            }
+
+            let mana_cost = cardOracle.slice(mcStart, mcEnd)
+            let cmc = findCMC(mana_cost)
+            let colors = findColors(mana_cost)
+
+            let condensedCard = {
+                "type_line": currentCard["type_line"],
+                "keywords": keywords,
+                "colors": colors,
+                "cmc": cmc,
+                "oracle_text": currentCard["oracle_text"],
+                "name": currentCard["name"],
+                "mana_cost": mana_cost,
+                "png": currentCard["image_uris"]["png"]
+            }
+
+            // append the current card to the card list
+            cardList.push(condensedCard)
+        }
 
         // if image_uris doesn't exist, then the card is not an adventure but
         // still has two faces
@@ -246,7 +294,9 @@ function gotData(data) {
             let oracle = currentCard["oracle_text"]
             let cmc = findCMC(currentCard["mana_cost"])
 
-            if (oracle.includes(`You may cast ${currentCard["name"]} as though it had flash if you pay {`)
+            if (oracle.includes(`
+                You may cast ${currentCard["name"]} as though it had flash if you pay {`
+                )
                 && oracle.includes(`} more to cast it`)) {
                 keywords.push("Flash")
                 print("can pay to flash in")
@@ -474,21 +524,6 @@ function keyPressed() {
 
                My current approach happens to handle Phyrexian mana because
                that's just {C/P}
-
-               if ((card['type_line'] === "Instant" ||
-                   card['oracle_text'].indexOf("Flash") !== -1) &&
-                   ((strip.colorsSelected().indexOf(...card['colors']) !== -1 ||
-                   card['colors'].length === 0) &&
-                   strip.getCMC() >= card['cmc'])
-               ) {
-                   let cardText = ''
-                   cardText += card['name'] + " " + card['mana_cost']
-                   cardText += " " + card["cmc"]
-                   cardText += "\n" + card['type_line']
-                   cardText += "\n" + card['oracle_text']
-                   print(cardText)
-               }
-
             */
 
             // a dictionary of cards sorted into buckets of mana value. This
@@ -521,38 +556,6 @@ function keyPressed() {
 
                 let cmc = card['cmc']
                 let cardOracle = card['oracle_text']
-
-                let discardIndex = card['oracle_text'].indexOf(`Discard ${card["name"]}`)
-                if (discardIndex !== -1) {
-                    // mc string start/end
-                    let mcStart = 0
-                    let mcEnd = 0
-                    let ifFirstRightBracket = false
-
-                    for (let i = discardIndex; i > 0; i--) {
-                        let charI = cardOracle[i]
-
-                        // if we're at a newline, that means we've reached
-                        // the end of the mc end string
-                        if (charI === "\n") {
-                            if (mcEnd === 0)
-                                mcEnd = i
-                            mcStart = i + 1
-                            break
-                        }
-
-                        // if this is the first right bracket we've seen,
-                        // track the mana cost end
-                        if (charI === "}" && !ifFirstRightBracket) {
-                            mcEnd = i + 1
-                            ifFirstRightBracket = true
-                        }
-                    }
-
-                    cmc = findCMC(cardOracle.slice(mcStart, mcEnd))
-
-                    print(cardOracle.slice(mcStart, mcEnd))
-                }
 
                 /*
                     If the card's lowercase oracle text contains creature,
