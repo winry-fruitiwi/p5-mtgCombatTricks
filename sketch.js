@@ -180,12 +180,13 @@ function gotData(data) {
             continue
         }
 
-        let keywords = currentCard["keywords"]
+        let originalKeywords = currentCard["keywords"]
         let cardOracle = currentCard['oracle_text']
 
         // if image_uris doesn't exist, then the card is not an adventure but
         // still has two faces
         if (!(currentCard["image_uris"])) {
+            let keywords = originalKeywords.slice()
             let frontFace = currentCard["card_faces"][0]
             let oracle = frontFace["oracle_text"]
             let cmc = findCMC(frontFace["mana_cost"])
@@ -215,6 +216,7 @@ function gotData(data) {
         }
 
         else if (currentCard['card_faces']) {
+            let keywords = originalKeywords.slice()
             for (let face of currentCard['card_faces']) {
                 let oracle = face["oracle_text"]
                 let cmc = findCMC(face["mana_cost"])
@@ -248,6 +250,7 @@ function gotData(data) {
         }
 
         else {
+            let keywords = originalKeywords.slice()
             let oracle = currentCard["oracle_text"]
             let cmc = findCMC(currentCard["mana_cost"])
 
@@ -274,18 +277,16 @@ function gotData(data) {
 
             // append the current card to the card list
             cardList.push(condensedCard)
-            print(condensedCard)
         }
 
         // added splitting for legendary cards
         let firstName = currentCard["name"].split(",")[0]
-        print("split word:", firstName)
         let discardIndex = cardOracle.indexOf(`Discard ${firstName}`)
 
         // if there's a discard index, that means somewhere in the string
         // there's a channel-type ability
         if (discardIndex !== -1) {
-            print(firstName, "is a channel card")
+            let keywords = originalKeywords.slice()
             channelCards++
             // mc string start/end
             let mcStart = 0
@@ -331,10 +332,7 @@ function gotData(data) {
 
             // append the current card to the card list
             cardList.push(condensedCard)
-
-            print(condensedCard)
         }
-        print(keywords)
     }
 
     // Scryfall only allows 175 cards or so per query, so sometimes they will
@@ -553,8 +551,7 @@ function keyPressed() {
                 in the current mana pool's colors. Colorless cards are included.
             */
             if ((card['type_line'].indexOf("Instant") !== -1 ||
-                card['keywords'].indexOf("Flash") !== -1) ||
-                card['oracle_text'].indexOf(`Discard ${card["name"]}`) !== -1
+                card['keywords'].indexOf("Flash") !== -1)
             ) {
 
                 // flag that checks if the card is within the current colors
@@ -647,25 +644,13 @@ function keyPressed() {
                 let cardText = loadImage(card['png'])
                 let cardText2 = loadImage(card['png'])
 
-                // image(cardText, 100, 800)
-
                 // initialize or get a CMC bucket.
                 let targetBucket = cmcBuckets[str(cmc)] ?? []
                 targetBucket.push([cardText, cardText2])
                 cmcBuckets[str(cmc)] = targetBucket
+                print(card["name"], card)
             }
         }
-
-        // for (let i=0; i<Object.keys(cmcBuckets).length; i++) {
-        //     let cmcBucket = Object.keys(cmcBuckets)[i]
-        //     // print(cmcBucket)
-        //     for (let img of cmcBuckets[cmcBucket]) {
-        //         // multiply the image's height to 240, the target image width,
-        //         // divided by the current image's width
-        //         img.height *= 240/img.width
-        //         img.width = 240
-        //     }
-        // }
     }
 
     // the color that the key is. Since JavaScript dictionary access is
@@ -726,8 +711,6 @@ function findCMC(manaString) {
         } else {
             if (mana !== "X" && mana !== "Channel" && mana !== "—") {
                 cmc++
-            } else {
-                print(mana + " was found in this string")
             }
         }
 
