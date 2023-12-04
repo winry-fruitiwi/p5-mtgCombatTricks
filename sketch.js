@@ -200,7 +200,7 @@ function gotData(data) {
 
             let condensedCard = {
                 "type_line": currentCard["type_line"],
-                "keywords": keywords,
+                "keywords": keywords.slice(),
                 "colors": frontFace["colors"],
                 "cmc": cmc,
                 "oracle_text": frontFace["oracle_text"],
@@ -232,7 +232,7 @@ function gotData(data) {
 
                 condensedCard = {
                     "type_line": face["type_line"],
-                    "keywords": keywords,
+                    "keywords": keywords.slice(),
                     "colors": findColors(face["mana_cost"]),
                     "cmc": cmc,
                     "oracle_text": face["oracle_text"],
@@ -258,12 +258,12 @@ function gotData(data) {
                 keywords.push("Flash")
                 print("can pay to flash in")
 
-                cmc += 2
+                cmc += 2 // hack: all cards of this type require only 2 mana
             }
 
             let condensedCard = {
                 "type_line": currentCard["type_line"],
-                "keywords": keywords,
+                "keywords": keywords.slice(),
                 "colors": currentCard["colors"],
                 "cmc": cmc,
                 "oracle_text": currentCard["oracle_text"],
@@ -274,6 +274,7 @@ function gotData(data) {
 
             // append the current card to the card list
             cardList.push(condensedCard)
+            print(condensedCard)
         }
 
         // added splitting for legendary cards
@@ -318,11 +319,12 @@ function gotData(data) {
 
             let condensedCard = {
                 "type_line": currentCard["type_line"],
-                "keywords": keywords,
+                "keywords": keywords.slice(),
                 "colors": colors,
                 "cmc": cmc,
                 "oracle_text": currentCard["oracle_text"],
                 "name": currentCard["name"],
+                // remove channel text
                 "mana_cost": mana_cost.replace("Channel — ", ""),
                 "png": currentCard["image_uris"]["png"]
             }
@@ -332,6 +334,7 @@ function gotData(data) {
 
             print(condensedCard)
         }
+        print(keywords)
     }
 
     // Scryfall only allows 175 cards or so per query, so sometimes they will
