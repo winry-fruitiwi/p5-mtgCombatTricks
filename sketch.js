@@ -167,6 +167,8 @@ function gotData(data) {
             break
     }
 
+    let channelCards = 0
+
     // loop through all the keys in data
     for (let i = 0; i < Object.keys(data["data"]).length; i++) {
         let currentCard = data["data"][i]
@@ -180,53 +182,6 @@ function gotData(data) {
 
         let keywords = currentCard["keywords"]
         let cardOracle = currentCard['oracle_text']
-
-        let discardIndex = cardOracle.indexOf(`Discard ${currentCard["name"]}`)
-
-        if (discardIndex !== -1) {
-            // mc string start/end
-            let mcStart = 0
-            let mcEnd = 0
-            let ifFirstRightBracket = false
-
-            for (let i = discardIndex; i > 0; i--) {
-                let charI = cardOracle[i]
-
-                // if we're at a newline, that means we've reached
-                // the end of the mc end string
-                if (charI === "\n") {
-                    if (mcEnd === 0)
-                        mcEnd = i
-                    mcStart = i + 1
-                    break
-                }
-
-                // if this is the first right bracket we've seen,
-                // track the mana cost end
-                if (charI === "}" && !ifFirstRightBracket) {
-                    mcEnd = i + 1
-                    ifFirstRightBracket = true
-                }
-            }
-
-            let mana_cost = cardOracle.slice(mcStart, mcEnd)
-            let cmc = findCMC(mana_cost)
-            let colors = findColors(mana_cost)
-
-            let condensedCard = {
-                "type_line": currentCard["type_line"],
-                "keywords": keywords,
-                "colors": colors,
-                "cmc": cmc,
-                "oracle_text": currentCard["oracle_text"],
-                "name": currentCard["name"],
-                "mana_cost": mana_cost,
-                "png": currentCard["image_uris"]["png"]
-            }
-
-            // append the current card to the card list
-            cardList.push(condensedCard)
-        }
 
         // if image_uris doesn't exist, then the card is not an adventure but
         // still has two faces
@@ -256,6 +211,7 @@ function gotData(data) {
 
             // append the current card to the card list
             cardList.push(condensedCard)
+            continue
         }
 
         else if (currentCard['card_faces']) {
@@ -288,6 +244,7 @@ function gotData(data) {
                 // append the current card to the card list
                 cardList.push(condensedCard)
             }
+            continue
         }
 
         else {
@@ -317,6 +274,63 @@ function gotData(data) {
 
             // append the current card to the card list
             cardList.push(condensedCard)
+        }
+
+        // added splitting for legendary cards
+        let firstName = currentCard["name"].split(",")[0]
+        print("split word:", firstName)
+        let discardIndex = cardOracle.indexOf(`Discard ${firstName}`)
+
+        // if there's a discard index, that means somewhere in the string
+        // there's a channel-type ability
+        if (discardIndex !== -1) {
+            print(firstName, "is a channel card")
+            channelCards++
+            // mc string start/end
+            let mcStart = 0
+            let mcEnd = 0
+            let ifFirstRightBracket = false
+
+            for (let i = discardIndex; i > 0; i--) {
+                let charI = cardOracle[i]
+
+                // if we're at a newline, that means we've reached
+                // the end of the mc end string
+                if (charI === "\n") {
+                    if (mcEnd === 0)
+                        mcEnd = i
+                    mcStart = i + 1
+                    break
+                }
+
+                // if this is the first right bracket we've seen,
+                // track the mana cost end
+                if (charI === "}" && !ifFirstRightBracket) {
+                    mcEnd = i + 1
+                    ifFirstRightBracket = true
+                }
+            }
+
+            let mana_cost = cardOracle.slice(mcStart, mcEnd)
+            let cmc = findCMC(mana_cost)
+            let colors = findColors(mana_cost)
+            keywords.push("Flash")
+
+            let condensedCard = {
+                "type_line": currentCard["type_line"],
+                "keywords": keywords,
+                "colors": colors,
+                "cmc": cmc,
+                "oracle_text": currentCard["oracle_text"],
+                "name": currentCard["name"],
+                "mana_cost": mana_cost.replace("Channel — ", ""),
+                "png": currentCard["image_uris"]["png"]
+            }
+
+            // append the current card to the card list
+            cardList.push(condensedCard)
+
+            print(condensedCard)
         }
     }
 
