@@ -50,11 +50,12 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const BACKGROUNDS = [
-    "woe/pie_wielder.png",
-    "woe/knight_of_doves.png",
-    "woe/moonshakers.png",
-    "woe/porridge.png",
-    "woe/archon.png"
+    "lci/cavern.png",
+    "lci/captivating.png",
+    "lci/sunken.png",
+    "lci/belligerent.png",
+    "lci/schooner.png",
+    "lci/galleon.png"
 ]
 
 function preload() {
