@@ -22,11 +22,11 @@ let state = 0 /* integer with values saying what to do when querying for cards.
  States in function this variable is used in. */
 
 // constants
-const SET_CODE = "neo"
+const SET_CODE = "mom"
 const NEO_COLLECTOR_ID_CAP = 302 // constant for when NEO jumpstart cards start
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
-const MOM_COLLECTOR_ID_CAP = 291 // constant for when MOM jumpstart cards start
+const MOM_COLLECTOR_ID_CAP = 291
 const LTR_COLLECTOR_ID_CAP = 281
 const WOE_COLLECTOR_ID_CAP = 261
 const LCI_COLLECTOR_ID_CAP = 286
@@ -49,14 +49,41 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
-const BACKGROUNDS = [
-    "lci/cavern.png",
-    "lci/captivating.png",
-    "lci/sunken.png",
-    "lci/belligerent.png",
-    "lci/schooner.png",
-    "lci/galleon.png"
-]
+const ALL_BACKGROUNDS = {
+    "lci": [
+        "lci/cavern.png",
+        "lci/captivating.png",
+        "lci/sunken.png",
+        "lci/belligerent.png",
+        "lci/schooner.png",
+        "lci/galleon.png"
+    ],
+    "ltr": [
+        "ltr/palantir.png",
+        "ltr/sting.png",
+        "ltr/thering.png"
+    ],
+    "mom": [
+        "mom/angelicintervention.png",
+        "mom/archangelelspeth.png",
+        "mom/eleshnorn.png",
+        "mom/radiantheliod.png",
+        "mom/theargentetchings.png"
+    ],
+    "one": [
+        "one/blacktwilight.png",
+        "one/bluetwilight.png",
+        "one/redtwilight.png",
+        "one/whitetwilight.png"
+    ],
+    "woe": [
+        "woe/archon.png",
+        "woe/knight_of_doves.png",
+        "woe/moonshakers.png",
+        "woe/pie_wielder.png",
+        "woe/porridge.png"
+    ]
+}
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -103,10 +130,12 @@ function setup() {
       styles cover the background staying where it is, its top edge always being
       visible, and the background image covering the entire background.
     */
+    let setBackgrounds = ALL_BACKGROUNDS[SET_CODE]
+
     const myStyles = `
     background-color: rgb(32, 33, 51);
     color: gainsboro;
-    background-image: url("backgrounds/` + random(BACKGROUNDS) + `");
+    background-image: url("backgrounds/` + random(setBackgrounds) + `");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: top;
