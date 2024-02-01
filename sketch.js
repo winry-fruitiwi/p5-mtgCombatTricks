@@ -22,7 +22,7 @@ let state = 0 /* integer with values saying what to do when querying for cards.
  States in function this variable is used in. */
 
 // constants
-const SET_CODE = "mom"
+const SET_CODE = "mkm"
 const NEO_COLLECTOR_ID_CAP = 302 // constant for when NEO jumpstart cards start
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
@@ -30,6 +30,7 @@ const MOM_COLLECTOR_ID_CAP = 291
 const LTR_COLLECTOR_ID_CAP = 281
 const WOE_COLLECTOR_ID_CAP = 261
 const LCI_COLLECTOR_ID_CAP = 286
+const MKM_COLLECTOR_ID_CAP = 271
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -50,6 +51,13 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "mkm": [
+        "mkm/candlestick.jpg",
+        "mkm/knife.jpg",
+        "mkm/pipe.jpg",
+        "mkm/rope.jpg",
+        "mkm/wrench.jpg"
+    ],
     "lci": [
         "lci/cavern.png",
         "lci/captivating.png",
@@ -82,6 +90,9 @@ const ALL_BACKGROUNDS = {
         "woe/moonshakers.png",
         "woe/pie_wielder.png",
         "woe/porridge.png"
+    ],
+    "neo": [
+
     ]
 }
 
@@ -168,6 +179,10 @@ function gotData(data) {
     // based on the currently selected set
     let collectorIDCap
     switch (SET_CODE) {
+        case "mkm":
+            collectorIDCap = MKM_COLLECTOR_ID_CAP
+            break
+
         case "lci":
             collectorIDCap = LCI_COLLECTOR_ID_CAP
             break
