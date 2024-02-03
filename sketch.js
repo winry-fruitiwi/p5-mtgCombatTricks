@@ -765,17 +765,52 @@ function findCMC(manaString) {
 }
 
 
-// finds colors of mana string
+// finds colors of mana string. actually outputs them as a list of lists,
+// where each list is one mana. This design is supposed to represent hybrid
+// mana costs in an easy-to-convert way, but it's more cumbersome to debug.
 function findColors(manaString) {
     let colors = []
 
-    for (let manaSymbol of manaString) {
-        if (manaSymbol === "W" || manaSymbol === "U" || manaSymbol === "B" ||
-            manaSymbol === "R" || manaSymbol === "G") {
-            if (!(colors.includes(manaSymbol))) {
-                colors.push(manaSymbol)
+    // deprecated from the time when I only used a single list
+    // for (let manaSymbol of manaString) {
+    //     if (manaSymbol === "W" || manaSymbol === "U" || manaSymbol === "B" ||
+    //         manaSymbol === "R" || manaSymbol === "G") {
+    //         if (!(colors.includes(manaSymbol))) {
+    //             colors.push(manaSymbol)
+    //         }
+    //     }
+    // }
+
+    let splittableManaString = ""
+
+    for (let i=0; i<manaString.length; i++) {
+        let char = manaString[i]
+
+        splittableManaString += char
+
+        // checks if the character is } and it's not the last character in the
+        // string
+        if (char === "}" && i !== manaString.length - 1) {
+            splittableManaString += " "
+        }
+    }
+
+    // split the splittable mana string
+    let splitString = splittableManaString.split(" ")
+
+    // for each mana string in splitString, strip away the surrounding brackets
+    for (let mana of splitString) {
+        let currentManaColors = []
+
+        //
+        for (let char of mana) {
+            if (mana === "W" || mana === "U" || mana === "B" ||
+                mana === "R" || mana === "G") {
+                currentManaColors.push(mana)
             }
         }
+
+        colors.append(currentManaColors)
     }
 
     return colors
