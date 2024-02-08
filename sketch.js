@@ -601,14 +601,31 @@ function keyPressed() {
 
                 // flag that checks if the card is within the current colors
                 let notWithinColors = false
-                // for every color in the card's colors:
-                for (let color of card["colors"]) {
-                    // check if it's within the current colors
-                    if (!(strip.colorsSelected().includes(color))) {
+                // for every color list in the card's colors:
+                for (let colorList of card["colors"]) {
+                    // checks if a match between the color list and the
+                    // currently selected colors is found during the next
+                    // color list loop
+                    let noMatch = true
+                    for (let color of strip.colorsSelected()) {
+                        // check if it's within the current colors
+                        if ((colorList.includes(color))) {
+                            print(card["name"], "is a valid combat trick. " +
+                                "Colors found:", card["colors"], color)
+                            noMatch = false
+                            break
+                        }
+                    }
+
+                    // make sure that there is a match and the color list
+                    // is not empty (due to being the list associated with
+                    // colorless mana). then exit the loop
+                    if (noMatch && (colorList.length !== 0)) {
                         notWithinColors = true
                         break
                     }
                 }
+
                 if (notWithinColors) {
                     continue
                 }
@@ -802,17 +819,17 @@ function findColors(manaString) {
     for (let mana of splitString) {
         let currentManaColors = []
 
-        //
         for (let char of mana) {
-            if (mana === "W" || mana === "U" || mana === "B" ||
-                mana === "R" || mana === "G") {
-                currentManaColors.push(mana)
+            if (char === "W" || char === "U" || char === "B" ||
+                char === "R" || char === "G") {
+                currentManaColors.push(char)
             }
         }
 
-        colors.append(currentManaColors)
+        colors.push(currentManaColors)
     }
 
+    print(colors)
     return colors
 }
 
