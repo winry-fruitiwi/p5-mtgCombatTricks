@@ -239,10 +239,11 @@ function gotData(data) {
             if (oracle.includes(`You may cast ${frontFace["name"]} as though it had flash if you pay {`)
                 && oracle.includes(`} more to cast it`)) {
                 keywords.push("Flash")
-                print("can pay to flash in")
 
                 cmc += 2
             }
+
+            cmc = disguiseCheck(oracle, keywords, cmc)
 
             let condensedCard = {
                 "type_line": currentCard["type_line"],
@@ -275,6 +276,8 @@ function gotData(data) {
                     cmc += 2 // assuming that the "pay to flash" cost stays at 2
                 }
 
+                disguiseCheck(oracle, keywords, cmc)
+
                 let condensedCard
 
                 condensedCard = {
@@ -298,6 +301,8 @@ function gotData(data) {
             let keywords = originalKeywords.slice()
             let oracle = currentCard["oracle_text"]
             let cmc = findCMC(currentCard["mana_cost"])
+
+            disguiseCheck(oracle, keywords, cmc)
 
             if (oracle.includes(`
                 You may cast ${currentCard["name"]} as though it had flash if you pay {`
@@ -610,8 +615,6 @@ function keyPressed() {
                     for (let color of strip.colorsSelected()) {
                         // check if it's within the current colors
                         if ((colorList.includes(color))) {
-                            print(card["name"], "is a valid combat trick. " +
-                                "Colors found:", card["colors"], color)
                             noMatch = false
                             break
                         }
@@ -833,6 +836,27 @@ function findColors(manaString) {
     return colors
 }
 
+// checks for disguise text in a card
+function disguiseCheck(oracle, keywords, ogCMC) {
+    if (oracle.indexOf(`Disguise {`) !== -1) {
+        // note that the length of "Disguise " is 9 chars
+        let indexOfDisguise = oracle.indexOf("Disguise {") + 9
+
+        // face-down cards can be turned up at any time
+        keywords.push("Flash")
+
+        // iterate over each character to find the CMC string that
+        // is the cost to flip up the disguised creature
+        for (let i = indexOfDisguise; i < oracle.length; i++) {
+            let char = oracle[i]
+            if (char === " " || char === "\n") {
+                let disguiseCost = oracle.slice(indexOfDisguise, i)
+                return findCMC(disguiseCost)
+            }
+        }
+    }
+    return ogCMC
+}
 
 // resets the drawing context's shadow
 function resetDcShadow() {
