@@ -276,7 +276,7 @@ function gotData(data) {
                     cmc += 2 // assuming that the "pay to flash" cost stays at 2
                 }
 
-                disguiseCheck(oracle, keywords, cmc)
+                cmc = disguiseCheck(oracle, keywords, cmc)
 
                 let condensedCard
 
@@ -302,7 +302,7 @@ function gotData(data) {
             let oracle = currentCard["oracle_text"]
             let cmc = findCMC(currentCard["mana_cost"])
 
-            disguiseCheck(oracle, keywords, cmc)
+            cmc = disguiseCheck(oracle, keywords, cmc)
 
             if (oracle.includes(`
                 You may cast ${currentCard["name"]} as though it had flash if you pay {`
@@ -849,9 +849,49 @@ function disguiseCheck(oracle, keywords, ogCMC) {
         // is the cost to flip up the disguised creature
         for (let i = indexOfDisguise; i < oracle.length; i++) {
             let char = oracle[i]
-            if (char === " " || char === "\n") {
+            if (char === " " || char === "\n" || char === ".") {
                 let disguiseCost = oracle.slice(indexOfDisguise, i)
-                return findCMC(disguiseCost)
+
+                let disguiseCMC = findCMC(disguiseCost)
+
+                // afterward, if there is a set of text that requires cost
+                // reduction, handle that here.
+                if (oracle.indexOf("This cost is reduced by {", indexOfDisguise) !== -1) {
+                    print("cost reduction found in this card")
+
+                    // handles "if" conditions that reduce a cost if a
+                    // single condition is met.
+                    if (oracle.indexOf("} if ", indexOfDisguise) !== -1) {
+                        let reductionIndex = oracle.indexOf("this cost is" +
+                            " reduced by {") + 24
+
+                        for (let j=reductionIndex; j < oracle.length; j++) {
+                            let char = oracle[j]
+
+                            if (char === " " || char === "\n" || char === ".") {
+                                let reduction = oracle.slice(reductionIndex, j)
+
+                                let reductionCMC = findCMC(reduction)
+
+                                return disguiseCMC - reductionCMC
+                            }
+                        }
+                    }
+
+                    // handles "for each" conditions that reduce the cost
+                    // for each time the condition is met (similar to the
+                    // cost reduction keyword Affinity)
+                    if (oracle.indexOf("} for each ", indexOfDisguise) !== -1) {
+                        // in this case, just assume that the mana
+                        // reduction is {1} and remove the first 3
+                        // characters from the disguise cost's CMC
+                        let reductionCMC = int(disguiseCost[1])
+
+                        return disguiseCMC - reductionCMC
+                    }
+                }
+
+                return disguiseCMC
             }
         }
     }
