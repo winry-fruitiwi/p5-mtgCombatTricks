@@ -4,6 +4,11 @@
  *
  */
 
+let setCode
+let mainSetCode
+let bonusSheetCode
+let additionalCodes
+
 let font
 let fixedWidthFont
 let variableWidthFont
@@ -22,7 +27,6 @@ let state = 0 /* integer with values saying what to do when querying for cards.
  States in function this variable is used in. */
 
 // constants
-const SET_CODE = "mkm"
 const NEO_COLLECTOR_ID_CAP = 302 // constant for when NEO jumpstart cards start
 const ONE_COLLECTOR_ID_CAP = 403 // constant for when ONE jumpstart cards start
 const BRO_COLLECTOR_ID_CAP = 287 // constant for when BRO jumpstart cards start
@@ -102,6 +106,17 @@ function preload() {
     variableWidthFont = loadFont('data/meiryo.ttf')
 }
 
+// helper function that constructs the set code from multiple global variables,
+// including cards from The List, SPG, and bonus sheets
+function defineSetCode() {
+    mainSetCode = "e:otj"
+    bonusSheetCode = "e:otp"
+    additionalCodes = "(e:spg+or+e:big)"
+
+    setCode = "https://api.scryfall.com/cards/search?q="
+    setCode +=`(${mainSetCode})+or+(${bonusSheetCode})+or+(${additionalCodes})`
+}
+
 
 function setup() {
     let cnv = createCanvas(1200, 600)
@@ -115,8 +130,10 @@ function setup() {
         numpad 1 → freeze sketch
         z → query</pre>`)
 
+    defineSetCode()
+
     debugCorner = new CanvasDebugCorner(5)
-    loadJSON(`https://api.scryfall.com/cards/search?q=set:${SET_CODE}`, gotData)
+    loadJSON(`${setCode}`, gotData)
 
     strip = new Strip()
 
@@ -141,7 +158,7 @@ function setup() {
       styles cover the background staying where it is, its top edge always being
       visible, and the background image covering the entire background.
     */
-    let setBackgrounds = ALL_BACKGROUNDS[SET_CODE]
+    let setBackgrounds = ALL_BACKGROUNDS[setCode]
 
     const myStyles = `
     background-color: rgb(32, 33, 51);
@@ -178,7 +195,7 @@ function gotData(data) {
     // optimization so that set code collector ID cap changes automatically
     // based on the currently selected set
     let collectorIDCap
-    switch (SET_CODE) {
+    switch (setCode) {
         case "mkm":
             collectorIDCap = MKM_COLLECTOR_ID_CAP
             break
