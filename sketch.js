@@ -55,6 +55,12 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "otj": [
+        "otj/luxurious_locomotive.png",
+        "otj/vault_key.png",
+        "otj/brigled_bidhorn.png",
+        "otj/wanted_griffin.png"
+    ],
     "mkm": [
         "mkm/candlestick.jpg",
         "mkm/knife.jpg",
@@ -109,12 +115,12 @@ function preload() {
 // helper function that constructs the set code from multiple global variables,
 // including cards from The List, SPG, and bonus sheets
 function defineSetCode() {
-    mainSetCode = "e:otj"
-    bonusSheetCode = "e:otp"
+    mainSetCode = "otj"
+    bonusSheetCode = "otp"
     additionalCodes = "(e:spg+or+e:big)"
 
     setCode = "https://api.scryfall.com/cards/search?q="
-    setCode +=`(${mainSetCode})+or+(${bonusSheetCode})+or+(${additionalCodes})`
+    setCode +=`(e:${mainSetCode})+or+(e:${bonusSheetCode})+or+(${additionalCodes})`
 }
 
 
@@ -158,7 +164,7 @@ function setup() {
       styles cover the background staying where it is, its top edge always being
       visible, and the background image covering the entire background.
     */
-    let setBackgrounds = ALL_BACKGROUNDS[setCode]
+    let setBackgrounds = ALL_BACKGROUNDS[mainSetCode]
 
     const myStyles = `
     background-color: rgb(32, 33, 51);
@@ -235,7 +241,7 @@ function gotData(data) {
     for (let i = 0; i < Object.keys(data["data"]).length; i++) {
         let currentCard = data["data"][i]
 
-        // there are often 5 jumpstart cards in every set (Zz was tricked by
+        // there are often 5 jumpstart cards in some sets (Zz was tricked by
         // one) so I hardcoded the maximum ID of cards in boosters. If the
         // current card's collector number is over the max ID, continue.
         if (currentCard['collector_number'] > collectorIDCap) {
@@ -278,6 +284,8 @@ function gotData(data) {
             continue
         }
 
+        // if the card does have an adventure, then there will be card faces
+        // but no adventure
         else if (currentCard['card_faces']) {
             let keywords = originalKeywords.slice()
             for (let face of currentCard['card_faces']) {
@@ -321,14 +329,51 @@ function gotData(data) {
 
             cmc = disguiseCheck(oracle, keywords, cmc)
 
-            if (oracle.includes(`
-                You may cast ${currentCard["name"]} as though it had flash if you pay {`
+            print(currentCard["name"])
+            print(oracle)
+            print(oracle.includes(`} more to cast it`))
+
+            if (oracle.includes(`You may cast ${currentCard["name"]} as though it had flash if you pay {`
                 )
                 && oracle.includes(`} more to cast it`)) {
                 keywords.push("Flash")
                 print("can pay to flash in")
 
                 cmc += 2 // hack: all cards of this type require only 2 mana
+            }
+
+            if (keywords.includes("Spree")) {
+                // split the oracle by newline, remove the first element,
+                // and start computing the mana value of each Spree branch.
+                // use the same strategy as for channel cards: find the
+                // beginning and end of all the mana symbols
+                let cardLines = oracle.split("\n")
+                let lowestSpreeMV = 99999999999999999
+
+                for (let line of cardLines) {
+                    if (line === "Spree") {
+                        continue
+                    }
+
+                    let mcEnd = 0
+
+                    // this loop should iterate forever, until we find a space
+                    for (let i = 2; i; i++) {
+                        if (line[i] === " ") {
+                            mcEnd = i
+                            break
+                        }
+                    }
+
+                    let spreeCMC = findCMC(line.slice(0, mcEnd))
+
+                    if (spreeCMC < lowestSpreeMV) {
+                        lowestSpreeMV = spreeCMC
+                    }
+                }
+
+                // add that branch's CMC to the mana value
+                cmc += lowestSpreeMV
             }
 
             let condensedCard = {
