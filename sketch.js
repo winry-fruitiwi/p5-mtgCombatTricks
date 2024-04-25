@@ -329,9 +329,9 @@ function gotData(data) {
 
             cmc = disguiseCheck(oracle, keywords, cmc)
 
-            print(currentCard["name"])
-            print(oracle)
-            print(oracle.includes(`} more to cast it`))
+            if (oracle.includes(`${currentCard["name"]} has flash as long as`)) {
+                keywords.push("Flash")
+            }
 
             if (oracle.includes(`You may cast ${currentCard["name"]} as though it had flash if you pay {`
                 )
