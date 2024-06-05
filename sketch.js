@@ -35,6 +35,7 @@ const LTR_COLLECTOR_ID_CAP = 281
 const WOE_COLLECTOR_ID_CAP = 261
 const LCI_COLLECTOR_ID_CAP = 286
 const MKM_COLLECTOR_ID_CAP = 271
+const MH3_COLLECTOR_ID_CAP = 319
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -101,6 +102,9 @@ const ALL_BACKGROUNDS = {
         "woe/pie_wielder.png",
         "woe/porridge.png"
     ],
+    "mh3": [
+
+    ],
     "neo": [
 
     ]
@@ -115,9 +119,9 @@ function preload() {
 // helper function that constructs the set code from multiple global variables,
 // including cards from The List, SPG, and bonus sheets
 function defineSetCode() {
-    mainSetCode = "otj"
-    bonusSheetCode = "otp"
-    additionalCodes = "(e:spg+or+e:big)"
+    mainSetCode = "mh3"
+    bonusSheetCode = "mh3"
+    additionalCodes = "e:mh3"
 
     setCode = "https://api.scryfall.com/cards/search?q="
     setCode +=`(e:${mainSetCode})+or+(e:${bonusSheetCode})+or+(${additionalCodes})`
@@ -445,6 +449,44 @@ function gotData(data) {
             // append the current card to the card list
             cardList.push(condensedCard)
         }
+
+        // support for the Reinforce mechanic
+        let reinforceIndex = cardOracle.indexOf(`Reinforce`)
+        if (reinforceIndex !== -1) {
+            let keywords = originalKeywords.slice()
+            let mcStart = reinforceIndex + "Reinforce 2—".length
+            let mcEnd = cardOracle.length
+
+            print("Reinforce 2—".length)
+
+            for (let i = mcStart; i < cardOracle.length; i++) {
+                // go up to the end of the card oracle or until there is a
+                // newline/space
+                if (cardOracle[i] === " " || cardOracle[i] === "\n") {
+                    mcEnd = i - 1
+                    break
+                }
+            }
+
+            let mana_cost = cardOracle.slice(mcStart, mcEnd)
+            let cmc = findCMC(mana_cost)
+            let colors = findColors(mana_cost)
+
+
+            let condensedCard = {
+                "type_line": currentCard["type_line"],
+                "keywords": keywords.slice(),
+                "colors": colors,
+                "cmc": cmc,
+                "oracle_text": currentCard["oracle_text"],
+                "name": currentCard["name"],
+                // remove channel text
+                "mana_cost": mana_cost,
+                "png": currentCard["image_uris"]["png"]
+            }
+
+            cardList.push(condensedCard)
+        }
     }
 
     // Scryfall only allows 175 cards or so per query, so sometimes they will
@@ -758,7 +800,7 @@ function keyPressed() {
 
                     cmc -= costReductionCMC
 
-                    console.log(indexOfLessToCast, indexOfSpellCosts)
+                    // console.log(indexOfLessToCast, indexOfSpellCosts)
                 }
 
                 // If Convoke is in the card's oracle:
@@ -894,7 +936,7 @@ function findColors(manaString) {
         colors.push(currentManaColors)
     }
 
-    print(colors)
+    // print(colors)
     return colors
 }
 
