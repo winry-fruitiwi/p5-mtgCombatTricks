@@ -56,6 +56,13 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "mh3": [
+        "mh3/axe.png",
+        "mh3/bauble.png",
+        "mh3/condor.png",
+        "mh3/falls.png",
+        "mh3/powerbalance.png"
+    ],
     "otj": [
         "otj/luxurious_locomotive.png",
         "otj/vault_key.png",
@@ -101,9 +108,6 @@ const ALL_BACKGROUNDS = {
         "woe/moonshakers.png",
         "woe/pie_wielder.png",
         "woe/porridge.png"
-    ],
-    "mh3": [
-
     ],
     "neo": [
 
@@ -237,6 +241,9 @@ function gotData(data) {
         case "neo":
             collectorIDCap = NEO_COLLECTOR_ID_CAP
             break
+
+        case "mh3":
+            collectorIDCap = MH3_COLLECTOR_ID_CAP
     }
 
     let channelCards = 0
@@ -270,12 +277,14 @@ function gotData(data) {
                 cmc += 2
             }
 
+            print(frontFace["name"])
+
             cmc = disguiseCheck(oracle, keywords, cmc)
 
             let condensedCard = {
                 "type_line": currentCard["type_line"],
                 "keywords": keywords.slice(),
-                "colors": frontFace["colors"],
+                "colors": findColors(frontFace["mana_cost"]),
                 "cmc": cmc,
                 "oracle_text": frontFace["oracle_text"],
                 "name": currentCard["name"],
@@ -383,7 +392,7 @@ function gotData(data) {
             let condensedCard = {
                 "type_line": currentCard["type_line"],
                 "keywords": keywords.slice(),
-                "colors": currentCard["colors"],
+                "colors": findColors(currentCard["mana_cost"]),
                 "cmc": cmc,
                 "oracle_text": currentCard["oracle_text"],
                 "name": currentCard["name"],
