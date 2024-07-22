@@ -36,6 +36,7 @@ const WOE_COLLECTOR_ID_CAP = 261
 const LCI_COLLECTOR_ID_CAP = 286
 const MKM_COLLECTOR_ID_CAP = 271
 const MH3_COLLECTOR_ID_CAP = 319
+const BLB_COLLECTOR_ID_CAP = 281
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -56,6 +57,9 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "blb": [
+
+    ],
     "mh3": [
         "mh3/axe.png",
         "mh3/bauble.png",
@@ -123,9 +127,9 @@ function preload() {
 // helper function that constructs the set code from multiple global variables,
 // including cards from The List, SPG, and bonus sheets
 function defineSetCode() {
-    mainSetCode = "mh3"
-    bonusSheetCode = "mh3"
-    additionalCodes = "e:mh3"
+    mainSetCode = "blb"
+    bonusSheetCode = "blb"
+    additionalCodes = "e:spg+cn≥54+cn≤63"
 
     setCode = "https://api.scryfall.com/cards/search?q="
     setCode +=`(e:${mainSetCode})+or+(e:${bonusSheetCode})+or+(${additionalCodes})`
@@ -244,6 +248,11 @@ function gotData(data) {
 
         case "mh3":
             collectorIDCap = MH3_COLLECTOR_ID_CAP
+            break
+
+        case "blb":
+            collectorIDCap = BLB_COLLECTOR_ID_CAP
+            break
     }
 
     let channelCards = 0
