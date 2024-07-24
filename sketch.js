@@ -58,7 +58,14 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
     "blb": [
-
+        "blb/fish.png",
+        "blb/manifoldmouse.png",
+        "blb/stockingpantry.png",
+        "blb/whiskerquillscribe.png",
+        "blb/embersfestival.png",
+        "blb/feather.png",
+        "blb/wishingwell.png",
+        "blb/stargaze.png"
     ],
     "mh3": [
         "mh3/axe.png",
