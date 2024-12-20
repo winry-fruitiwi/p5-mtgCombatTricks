@@ -37,6 +37,7 @@ const LCI_COLLECTOR_ID_CAP = 286
 const MKM_COLLECTOR_ID_CAP = 271
 const MH3_COLLECTOR_ID_CAP = 319
 const BLB_COLLECTOR_ID_CAP = 281
+const DSK_COLLECTOR_ID_CAP = 286
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -57,6 +58,13 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "dsk": [
+        "dsk/glimmer.png",
+        "dsk/curiosity.png",
+        "dsk/gremlin.png",
+        "dsk/watchdog.png",
+        "dsk/beartrap.png",
+    ],
     "blb": [
         "blb/fish.png",
         "blb/manifoldmouse.png",
@@ -65,6 +73,7 @@ const ALL_BACKGROUNDS = {
         "blb/embersfestival.png",
         "blb/feather.png",
         "blb/wishingwell.png",
+        "blb/grotto.png",
         "blb/stargaze.png"
     ],
     "mh3": [
@@ -134,9 +143,9 @@ function preload() {
 // helper function that constructs the set code from multiple global variables,
 // including cards from The List, SPG, and bonus sheets
 function defineSetCode() {
-    mainSetCode = "blb"
-    bonusSheetCode = "blb"
-    additionalCodes = "e:spg+cn≥54+cn≤63"
+    mainSetCode = "dsk"
+    bonusSheetCode = "dsk"
+    additionalCodes = "e:spg+cn≥64+cn≤74"
 
     setCode = "https://api.scryfall.com/cards/search?q="
     setCode +=`(e:${mainSetCode})+or+(e:${bonusSheetCode})+or+(${additionalCodes})`
@@ -185,7 +194,20 @@ function setup() {
     */
     let setBackgrounds = ALL_BACKGROUNDS[mainSetCode]
 
-    const myStyles = `
+    let myStyles
+
+    if (mainSetCode === "dsk") {
+        myStyles = `
+    background-color: rgb(32, 33, 51);
+    color: gainsboro;
+    background-image: url("backgrounds/` + random(setBackgrounds) + `");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    `
+    } else {
+        myStyles = `
     background-color: rgb(32, 33, 51);
     color: gainsboro;
     background-image: url("backgrounds/` + random(setBackgrounds) + `");
@@ -194,6 +216,7 @@ function setup() {
     background-position: top;
     background-size: cover;
     `
+    }
 
     // make element the html's body and assign myStyles to it. This will
     // give it a random background image and properly colored text.
@@ -221,6 +244,10 @@ function gotData(data) {
     // based on the currently selected set
     let collectorIDCap
     switch (setCode) {
+        case "dsk":
+            collectorIDCap = DSK_COLLECTOR_ID_CAP
+            break
+
         case "mkm":
             collectorIDCap = MKM_COLLECTOR_ID_CAP
             break
