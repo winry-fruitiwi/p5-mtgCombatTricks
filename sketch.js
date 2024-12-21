@@ -25,6 +25,7 @@ let c, w, u, b, r, g, p // images for CWUBRG and Phyrexian mana symbols
 let dc // drawing context
 let state = 0 /* integer with values saying what to do when querying for cards.
  States in function this variable is used in. */
+let myStyles
 
 // constants
 const NEO_COLLECTOR_ID_CAP = 302 // constant for when NEO jumpstart cards start
@@ -193,14 +194,13 @@ function setup() {
       visible, and the background image covering the entire background.
     */
     let setBackgrounds = ALL_BACKGROUNDS[mainSetCode]
-
-    let myStyles
+    let bg = `backgrounds/${random(setBackgrounds)}`
 
     if (mainSetCode === "dsk") {
         myStyles = `
     background-color: rgb(32, 33, 51);
     color: gainsboro;
-    background-image: url("backgrounds/` + random(setBackgrounds) + `");
+    background-image: url(` + bg + `);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
@@ -210,7 +210,7 @@ function setup() {
         myStyles = `
     background-color: rgb(32, 33, 51);
     color: gainsboro;
-    background-image: url("backgrounds/` + random(setBackgrounds) + `");
+    background-image: url(` + bg + `);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: top;
@@ -558,6 +558,22 @@ function draw() {
     textAlign(LEFT)
     textSize(14)
 
+    if (frameCount % 200 === 0) {
+        let setBackgrounds = ALL_BACKGROUNDS[mainSetCode]
+        let bg = `backgrounds/${random(setBackgrounds)}`
+            myStyles = `
+    background-color: rgb(32, 33, 51);
+    color: gainsboro;
+    background-image: url(` + bg + `);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    `
+
+        const element = document.querySelector('html, body');
+        element.style.cssText = myStyles;
+    }
     /* debugCorner needs to be last so its z-index is highest */
     // debugCorner.setText(`frameCount: ${frameCount}`, 2)
     // debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
