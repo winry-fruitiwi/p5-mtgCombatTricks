@@ -194,7 +194,7 @@ function setup() {
       visible, and the background image covering the entire background.
     */
     let setBackgrounds = ALL_BACKGROUNDS[mainSetCode]
-    let bg = `backgrounds/${random(setBackgrounds)}`
+    let bg = `https://winry-fruitiwi.github.io/p5-mtgCombatTricks/backgrounds/${random(setBackgrounds)}`
 
     if (mainSetCode === "dsk") {
         myStyles = `
