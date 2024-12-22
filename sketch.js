@@ -560,7 +560,7 @@ function draw() {
 
     if (frameCount % 200 === 0) {
         let setBackgrounds = ALL_BACKGROUNDS[mainSetCode]
-        let bg = `backgrounds/${random(setBackgrounds)}`
+        let bg = `https://winry-fruitiwi.github.io/p5-mtgCombatTricks/backgrounds/${random(setBackgrounds)}`
             myStyles = `
     background-color: rgb(32, 33, 51);
     color: gainsboro;
