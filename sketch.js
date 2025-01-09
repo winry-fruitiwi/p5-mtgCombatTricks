@@ -558,22 +558,6 @@ function draw() {
     textAlign(LEFT)
     textSize(14)
 
-    if (frameCount % 200 === 0) {
-        let setBackgrounds = ALL_BACKGROUNDS[mainSetCode]
-        let bg = `https://winry-fruitiwi.github.io/p5-mtgCombatTricks/backgrounds/${random(setBackgrounds)}`
-            myStyles = `
-    background-color: rgb(32, 33, 51);
-    color: gainsboro;
-    background-image: url(` + bg + `);
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    `
-
-        const element = document.querySelector('html, body');
-        element.style.cssText = myStyles;
-    }
     /* debugCorner needs to be last so its z-index is highest */
     // debugCorner.setText(`frameCount: ${frameCount}`, 2)
     // debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
