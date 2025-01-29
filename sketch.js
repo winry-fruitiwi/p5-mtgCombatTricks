@@ -5,7 +5,7 @@
  */
 
 let setCode
-let mainSetCode
+let mainSetCode = "fdn"
 let bonusSheetCode
 let additionalCodes
 
@@ -39,6 +39,7 @@ const MKM_COLLECTOR_ID_CAP = 271
 const MH3_COLLECTOR_ID_CAP = 319
 const BLB_COLLECTOR_ID_CAP = 281
 const DSK_COLLECTOR_ID_CAP = 286
+const FDN_COLLECTOR_ID_CAP = 281
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -59,6 +60,7 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "fdn": ["dsk/glimmer.png", "dsk/curiosity.png"],
     "dsk": [
         "dsk/glimmer.png",
         "dsk/curiosity.png",
@@ -144,9 +146,13 @@ function preload() {
 // helper function that constructs the set code from multiple global variables,
 // including cards from The List, SPG, and bonus sheets
 function defineSetCode() {
-    mainSetCode = "dsk"
-    bonusSheetCode = "dsk"
-    additionalCodes = "e:spg+cn≥64+cn≤74"
+    if (mainSetCode === "dsk") {
+        bonusSheetCode = "dsk"
+        additionalCodes = "e:spg+cn≥64+cn≤74"
+    } if (mainSetCode === "fdn") {
+        bonusSheetCode = "fdn"
+        additionalCodes = "e:spg+cn≥74+cn≤83"
+    }
 
     setCode = "https://api.scryfall.com/cards/search?q="
     setCode +=`(e:${mainSetCode})+or+(e:${bonusSheetCode})+or+(${additionalCodes})`
@@ -244,6 +250,9 @@ function gotData(data) {
     // based on the currently selected set
     let collectorIDCap
     switch (setCode) {
+        case "fdn":
+            collectorIDCap = FDN_COLLECTOR_ID_CAP
+            break
         case "dsk":
             collectorIDCap = DSK_COLLECTOR_ID_CAP
             break
