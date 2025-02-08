@@ -40,6 +40,7 @@ const MH3_COLLECTOR_ID_CAP = 319
 const BLB_COLLECTOR_ID_CAP = 281
 const DSK_COLLECTOR_ID_CAP = 286
 const FDN_COLLECTOR_ID_CAP = 281
+const DFT_COLLECTOR_ID_CAP = 291
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -60,7 +61,13 @@ const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
-    "fdn": ["dsk/glimmer.png", "dsk/curiosity.png"],
+    "dft": ["blb/feather.png", "blb/grotto.png"],
+    "fdn": [
+        "fdn/helpfulhunter.png",
+        "fdn/highfaetrickster.png",
+        "fdn/lunarinsight.png",
+        "fdn/ninelivesfamiliar.png",
+    ],
     "dsk": [
         "dsk/glimmer.png",
         "dsk/curiosity.png",
@@ -146,12 +153,17 @@ function preload() {
 // helper function that constructs the set code from multiple global variables,
 // including cards from The List, SPG, and bonus sheets
 function defineSetCode() {
+    // this code structure makes it easier to switch sets quickly
     if (mainSetCode === "dsk") {
         bonusSheetCode = "dsk"
         additionalCodes = "e:spg+cn≥64+cn≤74"
-    } if (mainSetCode === "fdn") {
+    } else if (mainSetCode === "fdn") {
         bonusSheetCode = "fdn"
         additionalCodes = "e:spg+cn≥74+cn≤83"
+    } else if (mainSetCode === "dft") {
+        // there are only 10 SPG cards but there are gold foils for each
+        additionalCodes = "e:spg+cn≥84+cn≤103"
+        bonusSheetCode = "dft"
     }
 
     setCode = "https://api.scryfall.com/cards/search?q="
@@ -200,7 +212,7 @@ function setup() {
       visible, and the background image covering the entire background.
     */
     let setBackgrounds = ALL_BACKGROUNDS[mainSetCode]
-    let bg = `https://winry-fruitiwi.github.io/p5-mtgCombatTricks/backgrounds/${random(setBackgrounds)}`
+    let bg = `backgrounds/${random(setBackgrounds)}`
 
     if (mainSetCode === "dsk") {
         myStyles = `
@@ -250,6 +262,9 @@ function gotData(data) {
     // based on the currently selected set
     let collectorIDCap
     switch (setCode) {
+        case "dft":
+            collectorIDCap = DFT_COLLECTOR_ID_CAP
+            break
         case "fdn":
             collectorIDCap = FDN_COLLECTOR_ID_CAP
             break
