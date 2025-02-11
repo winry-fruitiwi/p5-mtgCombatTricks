@@ -128,7 +128,7 @@ class Strip {
                 startY - manaImg.height/2)
         }
 
-        // reset the tint
+        // reset the tint and stroke
         noTint()
     }
 

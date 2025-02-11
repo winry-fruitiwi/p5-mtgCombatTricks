@@ -9,6 +9,9 @@ let mainSetCode = "dft"
 let bonusSheetCode
 let additionalCodes
 
+let inputBox
+let saveButton
+
 let font
 let fixedWidthFont
 let variableWidthFont
@@ -57,6 +60,8 @@ const Y_DIST_TO_NEXT_CARD_ROW = CARD_HEIGHT + CARD_PADDING_Y * 2 + LINE_MARGIN
 const STATE_TEXT_MARGIN = 10
 // a dictionary of names for the values that state can take on
 const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only non-tricks"}
+// all sets that this program supports
+const COMPATIBLE_SETS = ["dft", "dsk", "fdn"]
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
@@ -158,6 +163,13 @@ function preload() {
 // helper function that constructs the set code from multiple global variables,
 // including cards from The List, SPG, and bonus sheets
 function defineSetCode() {
+    // retrieve the locally stored set code from storage
+    let locallyStoredCode = localStorage.getItem("setCode")
+    if (!locallyStoredCode)
+        locallyStoredCode = "dft"
+
+    mainSetCode = locallyStoredCode
+
     // this code structure makes it easier to switch sets quickly
     if (mainSetCode === "dsk") {
         bonusSheetCode = "dsk"
@@ -184,9 +196,9 @@ function setup() {
 
     /* initialize instruction div */
     instructions = select('#ins')
-    instructions.html(`<pre>
-        numpad 1 → freeze sketch
-        z → query</pre>`)
+    instructions.html(`<pre>numpad 1 → freeze sketch
+z → query
+</pre>`)
 
     defineSetCode()
 
@@ -258,6 +270,27 @@ function setup() {
     }
 
     dc = drawingContext
+
+    inputBox = createInput()
+    inputBox.parent("#ins")
+    inputBox.size(50)
+
+    saveButton = createButton("Select Set")
+    saveButton.parent("#ins")
+    saveButton.mousePressed(saveSet)
+}
+
+
+// saves a set code to local storage when the save button is pressed! Only
+// works if the selected set is actually compatible.
+function saveSet() {
+    let set = inputBox.value()
+    if (COMPATIBLE_SETS.includes(set.toLowerCase())) {
+        localStorage.setItem("setCode", set.toLowerCase())
+        console.log("Set code stored in local storage. Reload to view")
+    } else {
+        console.log("Set not compatible")
+    }
 }
 
 
@@ -1116,7 +1149,7 @@ function updateState() {
 
 
 function mousePressed() {
-    console.log("Mouse clicked!")
+    // console.log("Mouse clicked!")
     strip.checkIfMouseClickedSelector()
 }
 

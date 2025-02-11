@@ -29,3 +29,25 @@ body {
 #canvas {
     margin-top: 30px;
 }
+
+input {
+    background-color: rgba(150, 150, 150, 1);
+    border: 1px solid rgba(125, 125, 125, 1);
+}
+
+button {
+    background-color: rgba(200, 200, 200, 1);
+    margin-left: 10px;
+    border: 1px solid rgba(125, 125, 125, 1);
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Darken the button slightly when hovered */
+button:hover {
+    background-color: rgba(170, 170, 170, 1);
+}
+
+/* Darken the button even more when clicked */
+button:active {
+    background-color: rgba(140, 140, 140, 1);
+}
