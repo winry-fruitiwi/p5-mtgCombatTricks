@@ -776,12 +776,16 @@ function displayCardImages() {
 }
 
 function keyPressed() {
+    // when focusing on an input field, disable keybinds and shortcuts
+    if (document.activeElement.tagName === "INPUT") return
+
     /* stop sketch */
     if (keyCode === 97) { /* numpad 1 */
         noLoop()
         instructions.html(`<pre>
             sketch stopped</pre>`)
     }
+
 
     if (key === '`') { /* toggle debug corner visibility */
         debugCorner.visible = !debugCorner.visible
