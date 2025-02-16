@@ -30,24 +30,61 @@ body {
     margin-top: 30px;
 }
 
+/*input {*/
+/*    background-color: rgba(150, 150, 150, 1);*/
+/*    border: 1px solid rgba(125, 125, 125, 1);*/
+/*}*/
+
+/*button {*/
+/*    background-color: rgba(200, 200, 200, 1);*/
+/*    margin-left: 10px;*/
+/*    border: 1px solid rgba(125, 125, 125, 1);*/
+/*    transition: background-color 0.2s ease-in-out;*/
+/*}*/
+
+/*!* Darken the button slightly when hovered *!*/
+/*button:hover {*/
+/*    background-color: rgba(170, 170, 170, 1);*/
+/*}*/
+
+/*!* Darken the button even more when clicked *!*/
+/*button:active {*/
+/*    background-color: rgba(140, 140, 140, 1);*/
+/*}*/
+
 input {
-    background-color: rgba(150, 150, 150, 1);
-    border: 1px solid rgba(125, 125, 125, 1);
+    background-color: #E0E0E0; /* Light gray for a softer look */
+    border: 1px solid #A0A0A0; /* Slightly darker gray for contrast */
+    color: #333; /* Darker text for better readability */
+    padding: 5px;
+    border-radius: 4px; /* Slightly rounded corners for a modern feel */
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+input:focus {
+    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.3);
+    outline: none; /* Removes default browser outline */
 }
 
 button {
-    background-color: rgba(200, 200, 200, 1);
-    margin-left: 10px;
-    border: 1px solid rgba(125, 125, 125, 1);
+    background-color: #D0D0D0; /* Medium gray for a balanced look */
+    border: 1px solid #A0A0A0; /* Defined border */
+    color: #222; /* Darker text for contrast */
+    padding: 5px;
+    border-radius: 4px; /* Matches input box */
     transition: background-color 0.2s ease-in-out;
+    margin-left: 5px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Darken the button slightly when hovered */
+/* Hover effect */
 button:hover {
-    background-color: rgba(170, 170, 170, 1);
+    background-color: #B8B8B8; /* Slightly darker for feedback */
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
 }
 
-/* Darken the button even more when clicked */
+/* Active/click effect */
 button:active {
-    background-color: rgba(140, 140, 140, 1);
+    background-color: #A0A0A0; /* Even darker when clicked */
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
 }
