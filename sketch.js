@@ -650,6 +650,7 @@ function draw() {
     // is displayed from the bottom-right in right align mode, the
     // coordinates are the width of the screen and the textAscent() +
     // stateTextMargin
+    noStroke()
     textAlign(RIGHT)
     textSize(20)
     fill(0, 0, 100)
