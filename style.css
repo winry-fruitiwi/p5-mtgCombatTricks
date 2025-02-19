@@ -88,3 +88,13 @@ button:active {
     background-color: #A0A0A0; /* Even darker when clicked */
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
 }
+
+select {
+    background-color: #E0E0E0;
+    color: black;
+    font-size: 16px;
+    padding: 2px;
+    border: 1px solid #A0A0A0; /* Subtle border */
+    border-radius: 4px; /* Slightly rounded edges */
+    cursor: pointer;
+}

@@ -271,13 +271,22 @@ z → query
 
     dc = drawingContext
 
-    inputBox = createInput()
-    inputBox.parent("#ins")
-    inputBox.size(50)
+    // inputBox = createInput()
+    // inputBox.parent("#ins")
+    // inputBox.size(50)
 
-    saveButton = createButton("Select Set")
-    saveButton.parent("#ins")
-    saveButton.mousePressed(saveSet)
+    inputBox = createSelect()
+    inputBox.parent("#ins")
+
+    inputBox.option("DFT")
+    inputBox.option("FDN")
+    inputBox.option("DSK")
+
+    inputBox.selected(localStorage.getItem("setCode").toUpperCase())
+
+    // saveButton = createButton("Select Set")
+    // saveButton.parent("#ins")
+    inputBox.changed(saveSet)
 }
 
 
