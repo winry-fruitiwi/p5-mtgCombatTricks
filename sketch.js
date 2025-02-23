@@ -69,8 +69,8 @@ const ALL_BACKGROUNDS = {
     "dft": [
         "dft/hulldrifter.png",
         "dft/vnwxt.png",
-        "dft/cursecloth.png",
-        "dft/dracosaurauxiliary.png",
+        // "dft/cursecloth.png",
+        // "dft/dracosaurauxiliary.png",
     ],
     "fdn": [
         "fdn/helpfulhunter.png",
@@ -189,6 +189,12 @@ function defineSetCode() {
 
 
 function setup() {
+    let locallyStoredCode = localStorage.getItem("setCode")
+    if (!locallyStoredCode) {
+        locallyStoredCode = "dft"
+        localStorage.setItem("setCode", locallyStoredCode)
+    }
+
     let cnv = createCanvas(1200, 600)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
@@ -198,6 +204,8 @@ function setup() {
     instructions = select('#ins')
     instructions.html(`<pre>numpad 1 → freeze sketch
 z → query
+t → change state
+use dropdown menu to change set code, then reload
 </pre>`)
 
     defineSetCode()
@@ -281,6 +289,7 @@ z → query
     inputBox.option("DFT")
     inputBox.option("FDN")
     inputBox.option("DSK")
+
 
     inputBox.selected(localStorage.getItem("setCode").toUpperCase())
 

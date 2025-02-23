@@ -19,11 +19,12 @@ body {
 }
 
 #ins {
-    color: gainsboro;
+    color: white;
     padding: 2px 4px 2px 4px;
     font-family: consolas, monospace;
     font-size: 12px;
     height: 100px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
 }
 
 #canvas {
