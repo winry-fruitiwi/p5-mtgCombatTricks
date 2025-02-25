@@ -69,8 +69,8 @@ const ALL_BACKGROUNDS = {
     "dft": [
         "dft/hulldrifter.png",
         "dft/vnwxt.png",
-        // "dft/cursecloth.png",
-        // "dft/dracosaurauxiliary.png",
+        "dft/cursecloth.png",
+        "dft/dracosaurauxiliary.png",
     ],
     "fdn": [
         "fdn/helpfulhunter.png",
@@ -589,8 +589,6 @@ function gotData(data) {
             let mcStart = reinforceIndex + "Reinforce 2—".length
             let mcEnd = cardOracle.length
 
-            print("Reinforce 2—".length)
-
             for (let i = mcStart; i < cardOracle.length; i++) {
                 // go up to the end of the card oracle or until there is a
                 // newline/space
@@ -613,6 +611,42 @@ function gotData(data) {
                 "oracle_text": currentCard["oracle_text"],
                 "name": currentCard["name"],
                 // remove channel text
+                "mana_cost": mana_cost,
+                "png": currentCard["image_uris"]["png"]
+            }
+
+            cardList.push(condensedCard)
+        }
+
+        // some cards have an effect when cycled, which is always preceded
+        // by the clause "when you cycle this card"
+        let cycleIndex = cardOracle.indexOf(`When you cycle this card, `)
+        if (cycleIndex !== -1) {
+            let keywords = originalKeywords.slice()
+            keywords.push("Flash")
+            let cycleMcStart = cardOracle.indexOf("Cycling ") + "Cycling ".length
+            let mcEnd = cardOracle.length
+
+            for (let i = cycleMcStart; i < cardOracle.length; i++) {
+                // go up to the end of the card oracle or until there is a
+                // newline/space
+                if (cardOracle[i] === " " || cardOracle[i] === "\n") {
+                    mcEnd = i - 1
+                    break
+                }
+            }
+
+            let mana_cost = cardOracle.slice(cycleMcStart, mcEnd)
+            let cmc = findCMC(mana_cost)
+            let colors = findColors(mana_cost)
+
+            let condensedCard = {
+                "type_line": currentCard["type_line"],
+                "keywords": keywords.slice(),
+                "colors": colors,
+                "cmc": cmc,
+                "oracle_text": currentCard["oracle_text"],
+                "name": currentCard["name"],
                 "mana_cost": mana_cost,
                 "png": currentCard["image_uris"]["png"]
             }
