@@ -68,9 +68,9 @@ const COMPATIBLE_SETS = ["dft", "dsk", "fdn"]
 const ALL_BACKGROUNDS = {
     "dft": [
         "dft/hulldrifter.png",
-        "dft/vnwxt.png",
+        "dft/monument.png",
         "dft/cursecloth.png",
-        "dft/dracosaurauxiliary.png",
+        "dft/aetherjacket.png",
     ],
     "fdn": [
         "fdn/helpfulhunter.png",
