@@ -814,16 +814,20 @@ function displayCardImages() {
         resizeCanvas(1200, currentImgPos.y)
 
     if (savedImg) {
+        enableDcShadow()
+        // imageMode(CENTER)
         savedImg.resize(1.5 * CARD_WIDTH, 0)
         image(savedImg,
-            windowWidth/2 + scrollX - savedImg.width/2,
+            width/2 + scrollX - savedImg.width/2,
             windowHeight/2 + scrollY - savedImg.height/2
         )
+        resetDcShadow()
 
         // image(savedImg,
         //     windowWidth/2 + scrollX,
         //     windowHeight/2 + scrollY
         // )
+        // imageMode(CORNER)
     }
 }
 
@@ -1183,6 +1187,7 @@ function resetDcShadow() {
 // turns on the drawing context's shadow/back glow
 function enableDcShadow() {
     let milk = color(207, 7, 100)
+    let white = color(0, 0, 255)
     /* call this before drawing an image */
     dc.shadowBlur = 20
     dc.shadowColor = milk
