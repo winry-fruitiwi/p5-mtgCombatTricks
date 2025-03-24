@@ -1,5 +1,5 @@
 # p5-mtgCombatTricks
-#### We forget combat tricks all the time in Magic games. Let's fix that!
+##### We forget combat tricks all the time in Magic games. Let's fix that!
 This app allows the user to see a list of all the combat tricks in any set 
 of colors, even if the opposing deck is five colors.
 
@@ -12,9 +12,12 @@ started very recently so there are much fewer sets, and set selection was
 only recently implemented. It primarily uses p5.js to render most of the 
 page on a p5.js canvas with very few web elements.
 
-Here is a video demo of this project's functions. (oops I have no idea how 
-to embed a video)
+Here is a video demo of how to use this project.
 
+<video width="600" controls><source src="data/bad_demo.mp4" 
+type="video/mp4">Your browser does not support the video tag.</video>
+
+Text version:<br>
 When running the sketch you can find a list of "instructions" giving hotkeys 
 for functions like changing the color query.
 
