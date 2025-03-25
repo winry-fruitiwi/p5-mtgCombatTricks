@@ -205,6 +205,7 @@ function setup() {
     instructions.html(`<pre>numpad 1 → freeze sketch
 use dropdown menu to change set code, then reload
 c, w, u, b, r, g → change colors of tricks selected 
+t → change state (WARNING: outdated, untested feature)
 </pre>`)
 
     defineSetCode()

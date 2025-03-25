@@ -14,8 +14,16 @@ page on a p5.js canvas with very few web elements.
 
 Here is a video demo of how to use this project.
 
-<video width="600" controls><source src="data/bad_demo.mp4" 
-type="video/mp4">Your browser does not support the video tag.</video>
+[//]: # (<video controls><source src="data/bad_demo.mp4" )
+[//]: # (type="video/mp4">Your browser does not support the video tag.</video>)
+
+[//]: # (<a href="https://winry-fruitiwi.github.io/p5-mtgCombatTricks/data/bad_demo.mp4">)
+
+[//]: # (  <img src="data/bad_thumbnail.png" alt="Watch demo" width="300"/>)
+
+[//]: # (</a>)
+
+[![Watch demo](data/bad_thumbnail_small.png)](https://winry-fruitiwi.github.io/p5-mtgCombatTricks/data/bad_demo.mp4)
 
 Text version:<br>
 When running the sketch you can find a list of "instructions" giving hotkeys 
