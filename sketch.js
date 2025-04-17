@@ -44,6 +44,7 @@ const BLB_COLLECTOR_ID_CAP = 281
 const DSK_COLLECTOR_ID_CAP = 286
 const FDN_COLLECTOR_ID_CAP = 281
 const DFT_COLLECTOR_ID_CAP = 291
+const TDM_COLLECTOR_ID_CAP = 286
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -61,7 +62,7 @@ const STATE_TEXT_MARGIN = 10
 // a dictionary of names for the values that state can take on
 const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only non-tricks"}
 // all sets that this program supports
-const COMPATIBLE_SETS = ["dft", "dsk", "fdn"]
+const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm"]
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
@@ -181,6 +182,10 @@ function defineSetCode() {
         // there are only 10 SPG cards but there are gold foils for each
         additionalCodes = "e:spg+cn≥84+cn≤103"
         bonusSheetCode = "dft"
+    } else if (mainSetCode === "tdm") {
+        // there are only 10 SPG cards but there are gold foils for each
+        additionalCodes = "e:spg+cn≥104+cn≤113"
+        bonusSheetCode = "tdm"
     }
 
     setCode = "https://api.scryfall.com/cards/search?q="
@@ -289,6 +294,7 @@ t → change state (WARNING: outdated, untested feature)
     inputBox.option("DFT")
     inputBox.option("FDN")
     inputBox.option("DSK")
+    inputBox.option("TDM")
 
 
     inputBox.selected(localStorage.getItem("setCode").toUpperCase())
@@ -318,6 +324,9 @@ function gotData(data) {
     // based on the currently selected set
     let collectorIDCap
     switch (setCode) {
+        case "tdm":
+            collectorIDCap = "TDM_COLLECTOR_ID_CAP"
+            break
         case "dft":
             collectorIDCap = DFT_COLLECTOR_ID_CAP
             break
@@ -396,7 +405,8 @@ function gotData(data) {
             if (oracle.includes(`You may cast ${frontFace["name"]} as though it had flash if you pay {`)
                 && oracle.includes(`} more to cast it`)) {
                 keywords.push("Flash")
-
+                // we can cheat here because the only cards that have extra
+                // costs to play with flash add 2 generic mana :p
                 cmc += 2
             }
 
@@ -421,7 +431,6 @@ function gotData(data) {
         }
 
         // if the card does have an adventure, then there will be card faces
-        // but no adventure
         else if (currentCard['card_faces']) {
             let keywords = originalKeywords.slice()
             for (let face of currentCard['card_faces']) {
@@ -440,6 +449,18 @@ function gotData(data) {
                 cmc = disguiseCheck(oracle, keywords, cmc)
 
                 let condensedCard
+
+                // check if the card face contains flash because each face will
+                // share the same keywords, which include flash and can cause
+                // funny issues. Example: Whirlwing Stormbrood has a sorcery
+                // omen that still appears like it has flash due to the keyword
+                // bug mentioned earlier this time.
+                if (!oracle.includes(`Flash`)) {
+                    let index = keywords.indexOf("Flash");
+                    if (index !== -1) {
+                        keywords.splice(index, 1);
+                    }
+                }
 
                 condensedCard = {
                     "type_line": face["type_line"],
