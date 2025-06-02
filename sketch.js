@@ -5,7 +5,7 @@
  */
 
 let setCode
-let mainSetCode = "dft"
+let mainSetCode = "fin"
 let bonusSheetCode
 let additionalCodes
 
@@ -45,6 +45,7 @@ const DSK_COLLECTOR_ID_CAP = 286
 const FDN_COLLECTOR_ID_CAP = 281
 const DFT_COLLECTOR_ID_CAP = 291
 const TDM_COLLECTOR_ID_CAP = 286
+const FIN_COLLECTOR_ID_CAP = 309
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -62,11 +63,17 @@ const STATE_TEXT_MARGIN = 10
 // a dictionary of names for the values that state can take on
 const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only non-tricks"}
 // all sets that this program supports
-const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm"]
+const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin"]
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "tdm": [
+        "tdm/fangkeepersfamiliar.png",
+        "tdm/runescalestormbrood.png",
+        "tdm/dragonstormglobe.png",
+        "tdm/callthespiritdragons.png",
+    ],
     "dft": [
         "dft/hulldrifter.png",
         "dft/monument.png",
@@ -186,6 +193,10 @@ function defineSetCode() {
         // there are only 10 SPG cards but there are gold foils for each
         additionalCodes = "e:spg+cn≥104+cn≤113"
         bonusSheetCode = "tdm"
+    } else if (mainSetCode === "fin") {
+        // the final fantasy set does not have any additional codes
+        additionalCodes = "e:fin"
+        bonusSheetCode = "fin"
     }
 
     setCode = "https://api.scryfall.com/cards/search?q="
@@ -291,10 +302,11 @@ t → change state (WARNING: outdated, untested feature)
     inputBox = createSelect()
     inputBox.parent("#ins")
 
+    inputBox.option("FIN")
+    inputBox.option("TDM")
+    inputBox.option("DSK")
     inputBox.option("DFT")
     inputBox.option("FDN")
-    inputBox.option("DSK")
-    inputBox.option("TDM")
 
 
     inputBox.selected(localStorage.getItem("setCode").toUpperCase())
@@ -324,6 +336,9 @@ function gotData(data) {
     // based on the currently selected set
     let collectorIDCap
     switch (setCode) {
+        case "fin":
+            collectorIDCap = FIN_COLLECTOR_ID_CAP
+            break
         case "tdm":
             collectorIDCap = "TDM_COLLECTOR_ID_CAP"
             break
