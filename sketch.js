@@ -68,6 +68,13 @@ const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin"]
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "fin": [
+        // "fin/lalacasterhero.png",
+        "fin/whiteauracite.png",
+        "fin/drglance.png",
+        "fin/sgenouliths.png",
+        "fin/deliverymoogle.png",
+    ],
     "tdm": [
         "tdm/fangkeepersfamiliar.png",
         "tdm/runescalestormbrood.png",
@@ -340,7 +347,7 @@ function gotData(data) {
             collectorIDCap = FIN_COLLECTOR_ID_CAP
             break
         case "tdm":
-            collectorIDCap = "TDM_COLLECTOR_ID_CAP"
+            collectorIDCap = TDM_COLLECTOR_ID_CAP
             break
         case "dft":
             collectorIDCap = DFT_COLLECTOR_ID_CAP
