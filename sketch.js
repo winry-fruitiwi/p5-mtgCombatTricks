@@ -1,6 +1,6 @@
 /**
  *  @author Winry
- *  @date 2023.1.20
+ *  @date 2023.01.20
  *
  */
 
@@ -202,7 +202,7 @@ function defineSetCode() {
         bonusSheetCode = "tdm"
     } else if (mainSetCode === "fin") {
         // the final fantasy set does not have any additional codes
-        additionalCodes = "e:fin"
+        additionalCodes = "e:fca"
         bonusSheetCode = "fin"
     }
 
