@@ -5,7 +5,7 @@
  */
 
 let setCode
-let mainSetCode = "fin"
+let mainSetCode = "eoe"
 let bonusSheetCode
 let additionalCodes
 
@@ -46,6 +46,7 @@ const FDN_COLLECTOR_ID_CAP = 281
 const DFT_COLLECTOR_ID_CAP = 291
 const TDM_COLLECTOR_ID_CAP = 286
 const FIN_COLLECTOR_ID_CAP = 309
+const EOE_COLLECTOR_ID_CAP = 276
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -63,7 +64,7 @@ const STATE_TEXT_MARGIN = 10
 // a dictionary of names for the values that state can take on
 const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only non-tricks"}
 // all sets that this program supports
-const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin"]
+const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin", "eoe"]
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
@@ -309,6 +310,7 @@ t → change state (WARNING: outdated, untested feature)
     inputBox = createSelect()
     inputBox.parent("#ins")
 
+    inputBox.option("EOE")
     inputBox.option("FIN")
     inputBox.option("TDM")
     inputBox.option("DSK")
@@ -343,6 +345,9 @@ function gotData(data) {
     // based on the currently selected set
     let collectorIDCap
     switch (setCode) {
+        case "eoe":
+            collectorIDCap = EOE_COLLECTOR_ID_CAP
+            break
         case "fin":
             collectorIDCap = FIN_COLLECTOR_ID_CAP
             break
@@ -424,12 +429,16 @@ function gotData(data) {
             let oracle = frontFace["oracle_text"]
             let cmc = findCMC(frontFace["mana_cost"])
 
-            if (oracle.includes(`You may cast ${frontFace["name"]} as though it had flash if you pay {`)
+            if (oracle.includes(`You may cast this spell as though it had flash if you pay {`)
                 && oracle.includes(`} more to cast it`)) {
                 keywords.push("Flash")
                 // we can cheat here because the only cards that have extra
                 // costs to play with flash add 2 generic mana :p
                 cmc += 2
+            } else if (oracle.includes(`You may cast this spell as though it had flash if you`)) {
+                // works for cards like Molten Exhale, which have no
+                // additional casting cost
+                keywords.push("Flash")
             }
 
             print(frontFace["name"])
@@ -459,13 +468,16 @@ function gotData(data) {
                 let oracle = face["oracle_text"]
                 let cmc = findCMC(face["mana_cost"])
 
-                if (oracle.includes(`You may cast ${face["name"]} as though it had flash if you pay {`)
+                if (oracle.includes(`You may cast this spell as though it had flash if you pay {`)
                     && oracle.includes(`} more to cast it`)) {
                     keywords.push("Flash")
-
-                    print("can pay to flash in")
-
-                    cmc += 2 // assuming that the "pay to flash" cost stays at 2
+                    // we can cheat here because the only cards that have extra
+                    // costs to play with flash add 2 generic mana :p
+                    cmc += 2
+                } else if (oracle.includes(`You may cast this spell as though it had flash if you`)) {
+                    // works for cards like Molten Exhale, which have no
+                    // additional casting cost
+                    keywords.push("Flash")
                 }
 
                 cmc = disguiseCheck(oracle, keywords, cmc)
@@ -512,13 +524,16 @@ function gotData(data) {
                 keywords.push("Flash")
             }
 
-            if (oracle.includes(`You may cast ${currentCard["name"]} as though it had flash if you pay {`
-                )
+            if (oracle.includes(`You may cast this spell as though it had flash if you pay {`)
                 && oracle.includes(`} more to cast it`)) {
                 keywords.push("Flash")
-                print("can pay to flash in")
-
-                cmc += 2 // hack: all cards of this type require only 2 mana
+                // we can cheat here because the only cards that have extra
+                // costs to play with flash add 2 generic mana :p
+                cmc += 2
+            } else if (oracle.includes(`You may cast this spell as though it had flash if you`)) {
+                // works for cards like Molten Exhale, which have no
+                // additional casting cost
+                keywords.push("Flash")
             }
 
             if (keywords.includes("Spree")) {
