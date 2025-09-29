@@ -5,7 +5,7 @@
  */
 
 let setCode
-let mainSetCode = "eoe"
+let mainSetCode = "om1"
 let bonusSheetCode
 let additionalCodes
 
@@ -47,6 +47,7 @@ const DFT_COLLECTOR_ID_CAP = 291
 const TDM_COLLECTOR_ID_CAP = 286
 const FIN_COLLECTOR_ID_CAP = 309
 const EOE_COLLECTOR_ID_CAP = 276
+const OM1_COLLECTOR_ID_CAP = 193 // Universes Beyond sets are often smaller
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -64,11 +65,21 @@ const STATE_TEXT_MARGIN = 10
 // a dictionary of names for the values that state can take on
 const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only non-tricks"}
 // all sets that this program supports
-const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin", "eoe"]
+const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin", "eoe", "woe", "om1"]
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "om1": [
+
+    ],
+    "eoe": [
+        "eoe/pinnaclestarcage.png",
+        "eoe/lashwhippredator.png",
+        "eoe/starwinder.png",
+        "eoe/theendstone.png",
+        "eoe/astellireclaimer.png",
+    ],
     "fin": [
         // "fin/lalacasterhero.png",
         "fin/whiteauracite.png",
@@ -184,7 +195,8 @@ function defineSetCode() {
     if (!locallyStoredCode)
         locallyStoredCode = "dft"
 
-    mainSetCode = locallyStoredCode
+    mainSetCode = locallyStoredCode.toLowerCase()
+    print(mainSetCode)
 
     // this code structure makes it easier to switch sets quickly
     if (mainSetCode === "dsk") {
@@ -205,17 +217,22 @@ function defineSetCode() {
         // the final fantasy set does not have any additional codes
         additionalCodes = "e:fca"
         bonusSheetCode = "fin"
+    } else if (mainSetCode === "om1") {
+        // the final fantasy set does not have any additional codes
+        additionalCodes = "e:om1"
+        bonusSheetCode = "omb"
     }
 
     setCode = "https://api.scryfall.com/cards/search?q="
     setCode +=`(e:${mainSetCode})+or+(e:${bonusSheetCode})+or+(${additionalCodes})`
+    print(setCode)
 }
 
 
 function setup() {
     let locallyStoredCode = localStorage.getItem("setCode")
     if (!locallyStoredCode) {
-        locallyStoredCode = "dft"
+        locallyStoredCode = "eoe"
         localStorage.setItem("setCode", locallyStoredCode)
     }
 
@@ -310,12 +327,14 @@ t → change state (WARNING: outdated, untested feature)
     inputBox = createSelect()
     inputBox.parent("#ins")
 
+    inputBox.option("OM1")
     inputBox.option("EOE")
     inputBox.option("FIN")
     inputBox.option("TDM")
     inputBox.option("DSK")
     inputBox.option("DFT")
     inputBox.option("FDN")
+    inputBox.option("WOE")
 
 
     inputBox.selected(localStorage.getItem("setCode").toUpperCase())
@@ -341,10 +360,14 @@ function saveSet() {
 
 // callback function for loadJSON when loading a page of the API for a Magic set
 function gotData(data) {
+    print(data)
     // optimization so that set code collector ID cap changes automatically
     // based on the currently selected set
     let collectorIDCap
     switch (setCode) {
+        case "om1":
+            collectorIDCap = OM1_COLLECTOR_ID_CAP
+            break
         case "eoe":
             collectorIDCap = EOE_COLLECTOR_ID_CAP
             break
@@ -405,11 +428,11 @@ function gotData(data) {
             break
     }
 
-    let channelCards = 0
-
     // loop through all the keys in data
     for (let i = 0; i < Object.keys(data["data"]).length; i++) {
         let currentCard = data["data"][i]
+        // print(currentCard)
+
 
         // there are often 5 jumpstart cards in some sets (Zz was tricked by
         // one) so I hardcoded the maximum ID of cards in boosters. If the
@@ -418,15 +441,27 @@ function gotData(data) {
             continue
         }
 
+        let name = "name"
+        if (currentCard["printed_name"]) {
+            console.log("alternate printed name available")
+            name = "printed_name"
+        }
+
+        let oracle_text = "oracle_text"
+        if (currentCard["printed_text"]) {
+            console.log("alternate printed text available")
+            oracle_text = "printed_text"
+        }
+
         let originalKeywords = currentCard["keywords"]
-        let cardOracle = currentCard['oracle_text']
+        let cardOracle = currentCard[oracle_text]
 
         // if image_uris doesn't exist, then the card is not an adventure but
         // still has two faces
         if (!(currentCard["image_uris"])) {
             let keywords = originalKeywords.slice()
             let frontFace = currentCard["card_faces"][0]
-            let oracle = frontFace["oracle_text"]
+            let oracle = frontFace[oracle_text]
             let cmc = findCMC(frontFace["mana_cost"])
 
             if (oracle.includes(`You may cast this spell as though it had flash if you pay {`)
@@ -441,7 +476,7 @@ function gotData(data) {
                 keywords.push("Flash")
             }
 
-            print(frontFace["name"])
+            print(frontFace[name])
 
             cmc = disguiseCheck(oracle, keywords, cmc)
 
@@ -450,8 +485,8 @@ function gotData(data) {
                 "keywords": keywords.slice(),
                 "colors": findColors(frontFace["mana_cost"]),
                 "cmc": cmc,
-                "oracle_text": frontFace["oracle_text"],
-                "name": currentCard["name"],
+                "oracle_text": frontFace[oracle_text],
+                "name": currentCard[name],
                 "mana_cost": currentCard["mana_cost"],
                 "png": frontFace["image_uris"]["png"]
             }
@@ -465,7 +500,7 @@ function gotData(data) {
         else if (currentCard['card_faces']) {
             let keywords = originalKeywords.slice()
             for (let face of currentCard['card_faces']) {
-                let oracle = face["oracle_text"]
+                let oracle = face[oracle_text]
                 let cmc = findCMC(face["mana_cost"])
 
                 if (oracle.includes(`You may cast this spell as though it had flash if you pay {`)
@@ -501,8 +536,8 @@ function gotData(data) {
                     "keywords": keywords.slice(),
                     "colors": findColors(face["mana_cost"]),
                     "cmc": cmc,
-                    "oracle_text": face["oracle_text"],
-                    "name": face["name"],
+                    "oracle_text": face[oracle_text],
+                    "name": face[name],
                     "mana_cost": face["mana_cost"],
                     "png": currentCard["image_uris"]["png"]
                 }
@@ -515,12 +550,12 @@ function gotData(data) {
 
         else {
             let keywords = originalKeywords.slice()
-            let oracle = currentCard["oracle_text"]
+            let oracle = currentCard[oracle_text]
             let cmc = findCMC(currentCard["mana_cost"])
 
             cmc = disguiseCheck(oracle, keywords, cmc)
 
-            if (oracle.includes(`${currentCard["name"]} has flash as long as`)) {
+            if (oracle.includes(`${currentCard[name]} has flash as long as`)) {
                 keywords.push("Flash")
             }
 
@@ -575,8 +610,8 @@ function gotData(data) {
                 "keywords": keywords.slice(),
                 "colors": findColors(currentCard["mana_cost"]),
                 "cmc": cmc,
-                "oracle_text": currentCard["oracle_text"],
-                "name": currentCard["name"],
+                "oracle_text": currentCard[oracle_text],
+                "name": currentCard[name],
                 "mana_cost": currentCard["mana_cost"],
                 "png": currentCard["image_uris"]["png"]
             }
@@ -586,14 +621,14 @@ function gotData(data) {
         }
 
         // added splitting for legendary cards
-        let firstName = currentCard["name"].split(",")[0]
-        let discardIndex = cardOracle.indexOf(`Discard ${firstName}`)
+        let firstName = currentCard[name].split(",")[0]
+        let discardIndex = cardOracle.indexOf(`Discard this card:`)
 
         // if there's a discard index, that means somewhere in the string
         // there's a channel-type ability
         if (discardIndex !== -1) {
+            print(currentCard)
             let keywords = originalKeywords.slice()
-            channelCards++
             // mc string start/end
             let mcStart = 0
             let mcEnd = 0
@@ -629,8 +664,8 @@ function gotData(data) {
                 "keywords": keywords.slice(),
                 "colors": colors,
                 "cmc": cmc,
-                "oracle_text": currentCard["oracle_text"],
-                "name": currentCard["name"],
+                "oracle_text": currentCard[oracle_text],
+                "name": currentCard[name],
                 // remove channel text
                 "mana_cost": mana_cost.replace("Channel — ", ""),
                 "png": currentCard["image_uris"]["png"]
@@ -640,8 +675,9 @@ function gotData(data) {
             cardList.push(condensedCard)
         }
 
-        // support for the Reinforce mechanic
-        let reinforceIndex = cardOracle.indexOf(`Reinforce`)
+        // support for mechanics that generate additional costs, including
+        // Reinforce, Enweb, and Mayhem
+        let reinforceIndex = cardOracle.indexOf(`Reinforce `)
         if (reinforceIndex !== -1) {
             let keywords = originalKeywords.slice()
             let mcStart = reinforceIndex + "Reinforce 2—".length
@@ -666,8 +702,78 @@ function gotData(data) {
                 "keywords": keywords.slice(),
                 "colors": colors,
                 "cmc": cmc,
-                "oracle_text": currentCard["oracle_text"],
-                "name": currentCard["name"],
+                "oracle_text": currentCard[oracle_text],
+                "name": currentCard[name],
+                // remove channel text
+                "mana_cost": mana_cost,
+                "png": currentCard["image_uris"]["png"]
+            }
+
+            cardList.push(condensedCard)
+        }
+
+        let enwebIndex = cardOracle.indexOf(`Enweb `)
+        if (enwebIndex !== -1) {
+            let keywords = originalKeywords.slice()
+            let mcStart = enwebIndex + "Enweb ".length
+            let mcEnd = cardOracle.length
+
+            for (let i = mcStart; i < cardOracle.length; i++) {
+                // go up to the end of the card oracle or until there is a
+                // newline/space
+                if (cardOracle[i] === " " || cardOracle[i] === "\n") {
+                    mcEnd = i - 1
+                    break
+                }
+            }
+
+            let mana_cost = cardOracle.slice(mcStart, mcEnd)
+            let cmc = findCMC(mana_cost)
+            let colors = findColors(mana_cost)
+
+
+            let condensedCard = {
+                "type_line": currentCard["type_line"],
+                "keywords": keywords.slice(),
+                "colors": colors,
+                "cmc": cmc,
+                "oracle_text": currentCard[oracle_text],
+                "name": currentCard[name],
+                // remove channel text
+                "mana_cost": mana_cost,
+                "png": currentCard["image_uris"]["png"]
+            }
+
+            cardList.push(condensedCard)
+        }
+
+        let mayhemIndex = cardOracle.indexOf(`Mayhem `)
+        if (mayhemIndex !== -1) {
+            let keywords = originalKeywords.slice()
+            let mcStart = mayhemIndex + "Mayhem ".length
+            let mcEnd = cardOracle.length
+
+            for (let i = mcStart; i < cardOracle.length; i++) {
+                // go up to the end of the card oracle or until there is a
+                // newline/space
+                if (cardOracle[i] === " " || cardOracle[i] === "\n") {
+                    mcEnd = i - 1
+                    break
+                }
+            }
+
+            let mana_cost = cardOracle.slice(mcStart, mcEnd)
+            let cmc = findCMC(mana_cost)
+            let colors = findColors(mana_cost)
+
+
+            let condensedCard = {
+                "type_line": currentCard["type_line"],
+                "keywords": keywords.slice(),
+                "colors": colors,
+                "cmc": cmc,
+                "oracle_text": currentCard[oracle_text],
+                "name": currentCard[name],
                 // remove channel text
                 "mana_cost": mana_cost,
                 "png": currentCard["image_uris"]["png"]
@@ -703,8 +809,8 @@ function gotData(data) {
                 "keywords": keywords.slice(),
                 "colors": colors,
                 "cmc": cmc,
-                "oracle_text": currentCard["oracle_text"],
-                "name": currentCard["name"],
+                "oracle_text": currentCard[oracle_text],
+                "name": currentCard[name],
                 "mana_cost": mana_cost,
                 "png": currentCard["image_uris"]["png"]
             }
