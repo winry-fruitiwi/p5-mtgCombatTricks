@@ -71,7 +71,11 @@ const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin", "eoe", "woe", "om1"]
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
     "om1": [
-
+        "om1/costumecloset.png",
+        "om1/strengthofwill.png",
+        "om1/carriagecut.png",
+        "om1/spmpigeon.png",
+        "om1/fateweaver.png",
     ],
     "eoe": [
         "eoe/pinnaclestarcage.png",
