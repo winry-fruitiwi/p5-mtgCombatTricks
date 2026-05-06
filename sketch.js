@@ -49,6 +49,7 @@ const FIN_COLLECTOR_ID_CAP = 309
 const EOE_COLLECTOR_ID_CAP = 276
 const OM1_COLLECTOR_ID_CAP = 193 // Universes Beyond sets are often smaller
 const TLA_COLLECTOR_ID_CAP = 286
+const SOS_COLLECTOR_ID_CAP = 281
 
 const CARD_WIDTH = 240 // ideal width of each card
 const CARD_HEIGHT = 340 // hardcoded height of each card
@@ -66,11 +67,20 @@ const STATE_TEXT_MARGIN = 10
 // a dictionary of names for the values that state can take on
 const STATE_VALUES = {0: "all tricks and non-tricks", 1: "only tricks", 2:"only non-tricks"}
 // all sets that this program supports
-const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin", "eoe", "woe", "om1", "tla"]
+const COMPATIBLE_SETS = ["dft", "dsk", "fdn", "tdm", "fin", "eoe", "woe", "om1", "tla", "sos"]
 
 // constant list of backgrounds available, changes every format or when I find
 // a new cycle of bomb rares that I like the art for
 const ALL_BACKGROUNDS = {
+    "sos": [
+        "sos/diaryofdreams.png",
+        "sos/embraceparadox.png",
+        "sos/planarengineering.png",
+        "sos/hoptoit.png",
+        "sos/pterafractyl.png",
+        "sos/themuse.png",
+        "sos/mathemagics.png",
+    ],
     "tla": [
 
     ],
@@ -226,13 +236,15 @@ function defineSetCode() {
         additionalCodes = "e:fca"
         bonusSheetCode = "fin"
     } else if (mainSetCode === "om1") {
-        // the final fantasy set does not have any additional codes
         additionalCodes = "e:om1"
         bonusSheetCode = "omb"
     } else if (mainSetCode === "tla") {
-        // the final fantasy set does not have any additional codes
         additionalCodes = "e:tle cn≥1 cn≤61"
         bonusSheetCode = "tla"
+    } else if (mainSetCode === "sos") {
+        // additionalCodes note: #159 is arena only and replaces Library of Leng
+        additionalCodes = "e:spg+cn≥149+cn≤159"
+        bonusSheetCode = "soa" // soh cah toa. SOS Mystical Archive
     }
 
     setCode = "https://api.scryfall.com/cards/search?q="
@@ -339,6 +351,7 @@ t → change state (WARNING: outdated, untested feature)
     inputBox = createSelect()
     inputBox.parent("#ins")
 
+    inputBox.option("SOS")
     inputBox.option("TLA")
     inputBox.option("OM1")
     inputBox.option("EOE")
@@ -378,6 +391,9 @@ function gotData(data) {
     // based on the currently selected set
     let collectorIDCap
     switch (setCode) {
+        case "sos":
+            collectorIDCap = SOS_COLLECTOR_ID_CAP
+            break
         case "tla":
             collectorIDCap = TLA_COLLECTOR_ID_CAP
             break
@@ -402,43 +418,33 @@ function gotData(data) {
         case "dsk":
             collectorIDCap = DSK_COLLECTOR_ID_CAP
             break
-
         case "mkm":
             collectorIDCap = MKM_COLLECTOR_ID_CAP
             break
-
         case "lci":
             collectorIDCap = LCI_COLLECTOR_ID_CAP
             break
-
         case "woe":
             collectorIDCap = WOE_COLLECTOR_ID_CAP
             break
-
         case "one":
             collectorIDCap = ONE_COLLECTOR_ID_CAP
             break
-
         case "bro":
             collectorIDCap = BRO_COLLECTOR_ID_CAP
             break
-
         case "mom":
             collectorIDCap = MOM_COLLECTOR_ID_CAP
             break
-
         case "ltr":
             collectorIDCap = LTR_COLLECTOR_ID_CAP
             break
-
         case "neo":
             collectorIDCap = NEO_COLLECTOR_ID_CAP
             break
-
         case "mh3":
             collectorIDCap = MH3_COLLECTOR_ID_CAP
             break
-
         case "blb":
             collectorIDCap = BLB_COLLECTOR_ID_CAP
             break
@@ -1200,7 +1206,8 @@ function keyPressed() {
 }
 
 
-// finds the CMC of any mana string
+// finds the CMC of any mana string. manaString looks something like this:
+// "{2}{B}{B/G}{G}"
 function findCMC(manaString) {
     // for every } that isn't the last character in the string, add a space to
     // the "splittableManaString".
@@ -1220,20 +1227,30 @@ function findCMC(manaString) {
             splittableManaString += " "
         }
     }
+    // splittableManaString now looks like "{2} {B} {B/G} {G}"
 
-    // split the splittable mana string
+    // splitString = ["{2}", "{B}", "{B/G}", "{G}"]
     let splitString = splittableManaString.split(" ")
 
-    // for each mana string in splitString, strip away the surrounding brackets
     for (let mana of splitString) {
+        // remove the brackets entirely
         mana = mana.replace('{', '')
         mana = mana.replace('}', '')
 
+        // at {2} the mana is an integer so we add that to cmc
         if (int(mana)) {
             let intMana = int(mana)
             cmc += intMana
         } else {
-            if (mana !== "X" && mana !== "Channel" && mana !== "—") {
+            // list of exceptions:
+            // - X costs do not increase the CMC because X can usually be 0
+            // - Due to the way my code works, some mana costs end up looking
+            //   like "Channel — {B}{G}" so filtering for those is important
+            // - Phyrexian mana can be paid for with life so CMC does not change
+            if (mana !== "X" &&
+                mana !== "Channel" &&
+                mana !== "—" &&
+                !mana.includes("P")) {
                 cmc++
             }
         }
@@ -1249,16 +1266,6 @@ function findCMC(manaString) {
 // mana costs in an easy-to-convert way, but it's more cumbersome to debug.
 function findColors(manaString) {
     let colors = []
-
-    // deprecated from the time when I only used a single list
-    // for (let manaSymbol of manaString) {
-    //     if (manaSymbol === "W" || manaSymbol === "U" || manaSymbol === "B" ||
-    //         manaSymbol === "R" || manaSymbol === "G") {
-    //         if (!(colors.includes(manaSymbol))) {
-    //             colors.push(manaSymbol)
-    //         }
-    //     }
-    // }
 
     let splittableManaString = ""
 
@@ -1281,6 +1288,8 @@ function findColors(manaString) {
     for (let mana of splitString) {
         let currentManaColors = []
 
+        if (mana.includes("P"))
+            continue
         for (let char of mana) {
             if (char === "W" || char === "U" || char === "B" ||
                 char === "R" || char === "G") {
